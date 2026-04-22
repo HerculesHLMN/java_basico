@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula 02 | Java para Iniciantes — Entrada de Dados</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2333;
+    --border: #30363d;
+    --accent: #f78166;
+    --accent2: #79c0ff;
+    --accent3: #56d364;
+    --accent4: #e3b341;
+    --text: #e6edf3;
+    --text-muted: #7d8590;
+    --java-orange: #f89820;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  .topbar {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 12px 40px; display: flex; align-items: center;
+    justify-content: space-between; position: sticky; top: 0; z-index: 100;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 16px; }
+  .java-badge {
+    background: var(--java-orange); color: #000;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 700; padding: 4px 10px; border-radius: 4px; letter-spacing: 1px;
+  }
+  .lesson-title { font-size: 13px; color: var(--text-muted); font-weight: 400; }
+  .lesson-title span { color: var(--text); font-weight: 600; }
+  .progress-bar { display: flex; gap: 6px; align-items: center; }
+  .prog-dot { width: 28px; height: 4px; border-radius: 2px; background: var(--border); }
+  .prog-dot.active { background: var(--accent3); }
+  .prog-dot.done { background: var(--accent3); }
+
+  .hero { padding: 60px 40px 40px; max-width: 900px; margin: 0 auto; animation: fadeUp 0.6s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  .file-indicator {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-muted); margin-bottom: 24px;
+  }
+  .file-indicator .dot { width:8px; height:8px; border-radius:50%; background: var(--accent3); animation: pulse 2s ease infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  h1 {
+    font-size: 42px; font-weight: 800; line-height: 1.1; margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--text) 40%, var(--accent3));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero-desc { font-size: 16px; color: var(--text-muted); line-height: 1.7; max-width: 600px; }
+
+  .content { max-width: 900px; margin: 0 auto; padding: 0 40px 80px; }
+  .section { margin-bottom: 48px; animation: fadeUp 0.6s ease both; }
+  .section:nth-child(1){animation-delay:.1s} .section:nth-child(2){animation-delay:.2s}
+  .section:nth-child(3){animation-delay:.3s} .section:nth-child(4){animation-delay:.4s}
+
+  .section-label { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--accent3); margin-bottom:12px; }
+  h2 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  p { font-size: 15px; line-height: 1.8; color: var(--text-muted); margin-bottom: 16px; }
+  p strong { color: var(--text); font-weight: 600; }
+
+  /* STEP FLOW */
+  .steps { margin: 24px 0; }
+  .step {
+    display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--surface2); border: 2px solid var(--accent3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700;
+    color: var(--accent3);
+  }
+  .step-content h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .step-content p { margin-bottom: 0; font-size: 14px; }
+  .step-content code {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    background: var(--surface2); padding: 2px 6px; border-radius: 4px; color: var(--accent2);
+  }
+
+  /* TERMINAL SIMULATOR */
+  .terminal {
+    background: #0a0a0a;
+    border: 1px solid #333;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .terminal-bar {
+    background: #1a1a1a;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #333;
+  }
+  .t-dot { width:12px; height:12px; border-radius:50%; }
+  .t-red { background: #ff5f57; }
+  .t-yellow { background: #ffbd2e; }
+  .t-green { background: #28c840; }
+  .t-title { flex: 1; text-align: center; font-size: 12px; color: #666; }
+  .terminal-body { padding: 20px 24px; min-height: 160px; }
+  .t-line { line-height: 1.8; font-size: 13px; }
+  .t-prompt { color: var(--accent3); }
+  .t-output { color: #e6edf3; }
+  .t-input-line { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .t-input-field {
+    background: transparent; border: none; border-bottom: 1px solid #444;
+    color: var(--accent4); font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; outline: none; flex: 1; padding: 2px 4px;
+  }
+  .run-btn {
+    background: var(--accent3); color: #000; border: none;
+    padding: 8px 20px; border-radius: 6px; font-weight: 700;
+    font-size: 13px; cursor: pointer; font-family: 'Sora', sans-serif;
+    transition: opacity 0.2s; margin-top: 12px;
+  }
+  .run-btn:hover { opacity: 0.85; }
+
+  /* CODE */
+  .code-block {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden; margin: 20px 0;
+  }
+  .code-header {
+    background: var(--surface2); border-bottom: 1px solid var(--border);
+    padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .code-lang { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--java-orange); font-weight: 600; }
+  .copy-btn {
+    background: none; border: 1px solid var(--border); color: var(--text-muted);
+    font-size: 11px; padding: 4px 10px; border-radius: 4px; cursor: pointer;
+    font-family: 'Sora', sans-serif; transition: all 0.2s;
+  }
+  .copy-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+  pre {
+    padding: 20px 24px; overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7;
+  }
+  .kw{color:#ff7b72} .tp{color:#79c0ff} .str{color:#a5d6ff}
+  .cm{color:#6e7681;font-style:italic} .num{color:#f2cc60} .var{color:#e6edf3} .fn{color:#d2a8ff}
+
+  .callout {
+    display: flex; gap: 14px; background: var(--surface);
+    border: 1px solid var(--border); border-left: 3px solid var(--accent4);
+    border-radius: 8px; padding: 16px 20px; margin: 20px 0; align-items: flex-start;
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .callout-text { font-size: 14px; line-height: 1.7; color: var(--text-muted); }
+  .callout-text strong { color: var(--accent4); }
+  .callout.warn { border-left-color: var(--accent); }
+  .callout.warn .callout-text strong { color: var(--accent); }
+
+  /* METHODS TABLE */
+  .methods-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  @media (max-width: 600px) { .methods-grid { grid-template-columns: 1fr; } }
+
+  .method-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    transition: border-color 0.2s;
+  }
+  .method-card:hover { border-color: var(--accent3); }
+  .method-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 700; color: var(--accent3); margin-bottom: 4px;
+  }
+  .method-desc { font-size: 12px; color: var(--text-muted); }
+
+  .nav-footer {
+    max-width: 900px; margin: 0 auto; padding: 0 40px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); padding: 12px 24px; border-radius: 8px;
+    text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s;
+  }
+  .nav-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+  .nav-btn.next { background: var(--accent3); border-color: var(--accent3); color: #000; }
+  .nav-btn.next:hover { background: #7ee89a; border-color: #7ee89a; color: #000; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <span class="java-badge">JAVA</span>
+    <span class="lesson-title">Aula 02 — <span>Entrada de Dados</span></span>
+  </div>
+  <div class="progress-bar">
+    <div class="prog-dot done"></div>
+    <div class="prog-dot done"></div>
+    <div class="prog-dot active"></div>
+    <div class="prog-dot"></div>
+    <div class="prog-dot"></div>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="file-indicator">
+      <span class="dot"></span>
+      Arquivo 3 de 5 — Entrada de Dados
+    </div>
+    <h1>Lendo Dados<br>do Usuário</h1>
+    <p class="hero-desc">
+      Para criar programas interativos, precisamos receber dados do usuário.
+      Em Java, usamos a classe <strong>Scanner</strong> para ler entradas do teclado.
+    </p>
+  </div>
+
+  <div class="content">
+
+    <div class="section">
+      <div class="section-label">Passo a Passo</div>
+      <h2>Como usar o Scanner</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Importar a classe</h3>
+            <p>No topo do arquivo, adicione: <code>import java.util.Scanner;</code></p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Criar o objeto Scanner</h3>
+            <p>Instancie vinculando ao teclado: <code>Scanner sc = new Scanner(System.in);</code></p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Usar os métodos de leitura</h3>
+            <p>Escolha o método conforme o tipo esperado: <code>sc.nextInt()</code>, <code>sc.nextLine()</code>, etc.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>Fechar o Scanner</h3>
+            <p>Ao terminar, libere o recurso: <code>sc.close();</code></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Métodos</div>
+      <h2>Métodos do Scanner</h2>
+
+      <div class="methods-grid">
+        <div class="method-card">
+          <div class="method-name">sc.nextInt()</div>
+          <div class="method-desc">Lê um número inteiro</div>
+        </div>
+        <div class="method-card">
+          <div class="method-name">sc.nextDouble()</div>
+          <div class="method-desc">Lê um número decimal</div>
+        </div>
+        <div class="method-card">
+          <div class="method-name">sc.next()</div>
+          <div class="method-desc">Lê uma palavra (até espaço)</div>
+        </div>
+        <div class="method-card">
+          <div class="method-name">sc.nextLine()</div>
+          <div class="method-desc">Lê linha completa (com espaços)</div>
+        </div>
+        <div class="method-card">
+          <div class="method-name">sc.nextLong()</div>
+          <div class="method-desc">Lê um número long</div>
+        </div>
+        <div class="method-card">
+          <div class="method-name">sc.nextFloat()</div>
+          <div class="method-desc">Lê um número float</div>
+        </div>
+        <div class="method-card">
+          <div class="method-name">sc.nextBoolean()</div>
+          <div class="method-desc">Lê true ou false</div>
+        </div>
+        <div class="method-card">
+          <div class="method-name">sc.close()</div>
+          <div class="method-desc">Fecha e libera o Scanner</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Simulador</div>
+      <h2>Terminal Interativo</h2>
+      <p>Simule um programa que pede seu nome e idade:</p>
+
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="t-dot t-red"></span>
+          <span class="t-dot t-yellow"></span>
+          <span class="t-dot t-green"></span>
+          <span class="t-title">Terminal Java</span>
+        </div>
+        <div class="terminal-body" id="term-body">
+          <div class="t-line t-output">Digite seu nome:</div>
+          <div class="t-input-line">
+            <span class="t-prompt">›</span>
+            <input type="text" class="t-input-field" id="t-nome" placeholder="Seu nome aqui...">
+          </div>
+          <div class="t-line t-output" style="margin-top:12px">Digite sua idade:</div>
+          <div class="t-input-line">
+            <span class="t-prompt">›</span>
+            <input type="number" class="t-input-field" id="t-idade" placeholder="Ex: 22">
+          </div>
+          <button class="run-btn" onclick="runTerminal()">▶ Executar</button>
+          <div id="t-result" style="margin-top:16px"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Código Completo</div>
+      <h2>Programa com Scanner</h2>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JAVA — EntradaDados.java</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre><span class="kw">import</span> java.util.Scanner;
+
+<span class="kw">public class</span> <span class="fn">EntradaDados</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {
+
+        Scanner <span class="var">sc</span> = <span class="kw">new</span> Scanner(System.in);
+
+        System.out.<span class="fn">print</span>(<span class="str">"Digite seu nome: "</span>);
+        <span class="tp">String</span> <span class="var">nome</span> = <span class="var">sc</span>.<span class="fn">nextLine</span>();
+
+        System.out.<span class="fn">print</span>(<span class="str">"Digite sua idade: "</span>);
+        <span class="tp">int</span> <span class="var">idade</span> = <span class="var">sc</span>.<span class="fn">nextInt</span>();
+
+        System.out.<span class="fn">print</span>(<span class="str">"Digite sua altura (m): "</span>);
+        <span class="tp">double</span> <span class="var">altura</span> = <span class="var">sc</span>.<span class="fn">nextDouble</span>();
+
+        System.out.<span class="fn">println</span>(<span class="str">"\n--- Seus Dados ---"</span>);
+        System.out.<span class="fn">println</span>(<span class="str">"Nome: "</span> + <span class="var">nome</span>);
+        System.out.<span class="fn">println</span>(<span class="str">"Idade: "</span> + <span class="var">idade</span> + <span class="str">" anos"</span>);
+        System.out.<span class="fn">println</span>(<span class="str">"Altura: "</span> + <span class="var">altura</span> + <span class="str">"m"</span>);
+
+        <span class="var">sc</span>.<span class="fn">close</span>();
+    }
+}</pre>
+      </div>
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-text">
+          <strong>Armadilha comum:</strong> Após chamar <code>nextInt()</code> ou <code>nextDouble()</code>,
+          o "Enter" pressionado permanece no buffer. Se na sequência você usar <code>nextLine()</code>,
+          ele lê esse Enter vazio. Solução: adicione um <code>sc.nextLine()</code> extra após métodos numéricos.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<nav class="nav-footer">
+  <a href="aula02_java_02_operadores.html" class="nav-btn">← Operadores</a>
+  <a href="aula02_java_04_condicionais.html" class="nav-btn next">Próximo: Condicionais →</a>
+</nav>
+
+<script>
+  function runTerminal() {
+    const nome = document.getElementById('t-nome').value.trim();
+    const idade = document.getElementById('t-idade').value.trim();
+    const res = document.getElementById('t-result');
+
+    if (!nome || !idade) {
+      res.innerHTML = '<span style="color:#f78166">Erro: preencha os dois campos!</span>';
+      return;
+    }
+
+    const anoNasc = new Date().getFullYear() - parseInt(idade);
+    res.innerHTML = `
+      <div style="color:#56d364; line-height:1.8; font-family:'JetBrains Mono',monospace; font-size:13px; border-top:1px solid #333; padding-top:12px">
+        <div>--- Saída do Programa ---</div>
+        <div>Nome: <span style="color:#a5d6ff">${nome}</span></div>
+        <div>Idade: <span style="color:#f2cc60">${idade}</span> anos</div>
+        <div>Nasceu por volta de: <span style="color:#e3b341">${anoNasc}</span></div>
+        <div style="margin-top:8px;color:#6e7681">// Scanner encerrado com sc.close()</div>
+      </div>`;
+  }
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText);
+    btn.textContent = 'Copiado!';
+    setTimeout(() => btn.textContent = 'Copiar', 2000);
+  }
+</script>
+</body>
+</html>

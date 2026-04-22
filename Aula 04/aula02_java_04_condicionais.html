@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula 02 | Java para Iniciantes — Condicionais</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2333;
+    --border: #30363d;
+    --accent: #f78166;
+    --accent2: #79c0ff;
+    --accent3: #56d364;
+    --accent4: #e3b341;
+    --text: #e6edf3;
+    --text-muted: #7d8590;
+    --java-orange: #f89820;
+    --purple: #c084fc;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  .topbar {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 12px 40px; display: flex; align-items: center;
+    justify-content: space-between; position: sticky; top: 0; z-index: 100;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 16px; }
+  .java-badge { background: var(--java-orange); color: #000; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 4px; letter-spacing: 1px; }
+  .lesson-title { font-size: 13px; color: var(--text-muted); font-weight: 400; }
+  .lesson-title span { color: var(--text); font-weight: 600; }
+  .progress-bar { display: flex; gap: 6px; align-items: center; }
+  .prog-dot { width: 28px; height: 4px; border-radius: 2px; background: var(--border); }
+  .prog-dot.active { background: var(--purple); }
+  .prog-dot.done { background: var(--accent3); }
+
+  .hero { padding: 60px 40px 40px; max-width: 900px; margin: 0 auto; animation: fadeUp 0.6s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .file-indicator { display: inline-flex; align-items: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 6px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-muted); margin-bottom: 24px; }
+  .file-indicator .dot { width:8px; height:8px; border-radius:50%; background: var(--purple); animation: pulse 2s ease infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  h1 { font-size: 42px; font-weight: 800; line-height: 1.1; margin-bottom: 16px; background: linear-gradient(135deg, var(--text) 40%, var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-desc { font-size: 16px; color: var(--text-muted); line-height: 1.7; max-width: 600px; }
+
+  .content { max-width: 900px; margin: 0 auto; padding: 0 40px 80px; }
+  .section { margin-bottom: 48px; animation: fadeUp 0.6s ease both; }
+  .section:nth-child(1){animation-delay:.1s} .section:nth-child(2){animation-delay:.2s}
+  .section:nth-child(3){animation-delay:.3s} .section:nth-child(4){animation-delay:.4s}
+  .section-label { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--purple); margin-bottom:12px; }
+  h2 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  p { font-size: 15px; line-height: 1.8; color: var(--text-muted); margin-bottom: 16px; }
+  p strong { color: var(--text); font-weight: 600; }
+
+  /* FLOWCHART VISUAL */
+  .flowchart {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .fc-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    text-align: center;
+    min-width: 160px;
+  }
+  .fc-diamond {
+    background: var(--surface2);
+    border: 2px solid var(--purple);
+    transform: rotate(45deg);
+    width: 100px; height: 100px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 4px 0;
+  }
+  .fc-diamond span {
+    transform: rotate(-45deg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--purple);
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .fc-arrow { width: 2px; height: 24px; background: var(--border); margin: 0 auto; position: relative; }
+  .fc-arrow::after { content:'▼'; position:absolute; bottom:-10px; left:50%; transform:translateX(-50%); color:var(--border); font-size:12px; }
+  .fc-branches {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+    margin-top: 8px;
+  }
+  .fc-branch { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .fc-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .fc-label.yes { color: var(--accent3); }
+  .fc-label.no { color: var(--accent); }
+  .fc-action {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* CODE */
+  .code-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 20px 0; }
+  .code-header { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
+  .code-lang { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--java-orange); font-weight: 600; }
+  .copy-btn { background: none; border: 1px solid var(--border); color: var(--text-muted); font-size: 11px; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-family: 'Sora', sans-serif; transition: all 0.2s; }
+  .copy-btn:hover { border-color: var(--purple); color: var(--purple); }
+  pre { padding: 20px 24px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; }
+  .kw{color:#ff7b72} .tp{color:#79c0ff} .str{color:#a5d6ff}
+  .cm{color:#6e7681;font-style:italic} .num{color:#f2cc60} .var{color:#e6edf3} .fn{color:#d2a8ff}
+  .ind{color:#c084fc;font-weight:700}
+
+  /* INTERACTIVE IF TESTER */
+  .if-tester {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+  }
+  .tester-title { font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 20px; }
+  .tester-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .tester-label { font-size: 13px; color: var(--text-muted); min-width: 80px; }
+  .tester-input {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 8px 14px; color: var(--text);
+    font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600;
+    width: 100px; text-align: center; outline: none; transition: border-color 0.2s;
+  }
+  .tester-input:focus { border-color: var(--purple); }
+  .test-btn { background: var(--purple); color: #000; border: none; padding: 10px 24px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; font-family: 'Sora', sans-serif; transition: opacity 0.2s; }
+  .test-btn:hover { opacity: 0.85; }
+  .test-output {
+    background: var(--bg); border-radius: 8px; padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    border: 1px dashed var(--border); min-height: 44px;
+    display: flex; align-items: center; color: var(--text-muted);
+  }
+  .test-output.success { color: var(--accent3); border-color: var(--accent3); }
+  .test-output.warning { color: var(--accent4); border-color: var(--accent4); }
+  .test-output.danger  { color: var(--accent); border-color: var(--accent); }
+
+  .callout { display: flex; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent4); border-radius: 8px; padding: 16px 20px; margin: 20px 0; align-items: flex-start; }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .callout-text { font-size: 14px; line-height: 1.7; color: var(--text-muted); }
+  .callout-text strong { color: var(--accent4); }
+  .callout.tip { border-left-color: var(--accent3); }
+  .callout.tip .callout-text strong { color: var(--accent3); }
+
+  .nav-footer { max-width: 900px; margin: 0 auto; padding: 0 40px 60px; display: flex; justify-content: space-between; align-items: center; }
+  .nav-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s; }
+  .nav-btn:hover { border-color: var(--purple); color: var(--purple); }
+  .nav-btn.next { background: var(--purple); border-color: var(--purple); color: #000; }
+  .nav-btn.next:hover { background: #d4a8ff; border-color: #d4a8ff; color: #000; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <span class="java-badge">JAVA</span>
+    <span class="lesson-title">Aula 02 — <span>Condicionais</span></span>
+  </div>
+  <div class="progress-bar">
+    <div class="prog-dot done"></div>
+    <div class="prog-dot done"></div>
+    <div class="prog-dot done"></div>
+    <div class="prog-dot active"></div>
+    <div class="prog-dot"></div>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="file-indicator">
+      <span class="dot"></span>
+      Arquivo 4 de 5 — Condicionais
+    </div>
+    <h1>Estruturas<br>Condicionais</h1>
+    <p class="hero-desc">
+      Condicionais permitem ao programa tomar decisões — executar blocos diferentes
+      dependendo se uma condição é verdadeira ou falsa.
+    </p>
+  </div>
+
+  <div class="content">
+
+    <div class="section">
+      <div class="section-label">Fluxo de Decisão</div>
+      <h2>Como o if / else funciona</h2>
+      <p>O programa avalia uma condição booleana. Se for <strong>true</strong>, executa o bloco <code>if</code>. Senão, cai no <code>else</code>.</p>
+
+      <div class="flowchart">
+        <div class="fc-box">Início</div>
+        <div class="fc-arrow"></div>
+        <div class="fc-diamond"><span>condição<br>é true?</span></div>
+        <div class="fc-branches">
+          <div class="fc-branch">
+            <div class="fc-label yes">SIM ✓</div>
+            <div class="fc-action">bloco if{}</div>
+          </div>
+          <div class="fc-branch">
+            <div class="fc-label no">NÃO ✗</div>
+            <div class="fc-action">bloco else{}</div>
+          </div>
+        </div>
+        <div style="margin-top:20px">
+          <div class="fc-box" style="border-color:var(--accent3);color:var(--accent3)">Continua o programa</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Sintaxe</div>
+      <h2>if, else if e else</h2>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JAVA</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre><span class="tp">int</span> <span class="var">nota</span> = <span class="num">75</span>;
+
+<span class="cm">// if simples</span>
+<span class="ind">if</span> (<span class="var">nota</span> >= <span class="num">60</span>) {
+    System.out.<span class="fn">println</span>(<span class="str">"Aprovado!"</span>);
+}
+
+<span class="cm">// if / else</span>
+<span class="ind">if</span> (<span class="var">nota</span> >= <span class="num">60</span>) {
+    System.out.<span class="fn">println</span>(<span class="str">"Aprovado!"</span>);
+} <span class="ind">else</span> {
+    System.out.<span class="fn">println</span>(<span class="str">"Reprovado."</span>);
+}
+
+<span class="cm">// if / else if / else</span>
+<span class="ind">if</span> (<span class="var">nota</span> >= <span class="num">90</span>) {
+    System.out.<span class="fn">println</span>(<span class="str">"Excelente!"</span>);
+} <span class="ind">else if</span> (<span class="var">nota</span> >= <span class="num">70</span>) {
+    System.out.<span class="fn">println</span>(<span class="str">"Bom!"</span>);
+} <span class="ind">else if</span> (<span class="var">nota</span> >= <span class="num">60</span>) {
+    System.out.<span class="fn">println</span>(<span class="str">"Regular."</span>);
+} <span class="ind">else</span> {
+    System.out.<span class="fn">println</span>(<span class="str">"Reprovado."</span>);
+}</pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Interativo</div>
+      <h2>Testador de Notas</h2>
+
+      <div class="if-tester">
+        <div class="tester-title">🎯 Simule o if/else — insira uma nota de 0 a 100</div>
+        <div class="tester-row">
+          <span class="tester-label">Nota:</span>
+          <input type="number" class="tester-input" id="nota-input" value="75" min="0" max="100">
+          <button class="test-btn" onclick="testNota()">Executar if/else</button>
+        </div>
+        <div class="test-output" id="test-out">// clique em Executar para ver o resultado</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Switch</div>
+      <h2>Switch — múltiplas opções fixas</h2>
+      <p>O <strong>switch</strong> é ideal quando você precisa comparar uma variável com vários valores fixos. É mais legível que uma sequência longa de <code>else if</code>.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JAVA — Switch.java</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre><span class="tp">int</span> <span class="var">diaSemana</span> = <span class="num">3</span>;
+
+<span class="ind">switch</span> (<span class="var">diaSemana</span>) {
+    <span class="kw">case</span> <span class="num">1</span>:
+        System.out.<span class="fn">println</span>(<span class="str">"Segunda-feira"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">2</span>:
+        System.out.<span class="fn">println</span>(<span class="str">"Terça-feira"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">3</span>:
+        System.out.<span class="fn">println</span>(<span class="str">"Quarta-feira"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">4</span>:
+        System.out.<span class="fn">println</span>(<span class="str">"Quinta-feira"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">5</span>:
+        System.out.<span class="fn">println</span>(<span class="str">"Sexta-feira"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">default</span>:
+        System.out.<span class="fn">println</span>(<span class="str">"Fim de semana!"</span>);
+}</pre>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-text">
+          <strong>Não esqueça o break!</strong> Sem ele, o Java executa todos os casos seguintes até o fim — comportamento chamado de <em>fall-through</em>. Na maioria dos casos, isso é um bug.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<nav class="nav-footer">
+  <a href="aula02_java_03_entrada_dados.html" class="nav-btn">← Entrada de Dados</a>
+  <a href="aula02_java_05_exercicios.html" class="nav-btn next">Próximo: Exercícios →</a>
+</nav>
+
+<script>
+  function testNota() {
+    const nota = parseInt(document.getElementById('nota-input').value);
+    const out = document.getElementById('test-out');
+    out.className = 'test-output';
+
+    if (isNaN(nota) || nota < 0 || nota > 100) {
+      out.textContent = '// Erro: insira uma nota entre 0 e 100';
+      out.classList.add('danger');
+      return;
+    }
+
+    let msg, cls, java;
+    if (nota >= 90) {
+      msg = 'Excelente! 🏆'; cls = 'success';
+      java = `nota(${nota}) >= 90 → if: "Excelente!"`;
+    } else if (nota >= 70) {
+      msg = 'Bom! ✅'; cls = 'success';
+      java = `nota(${nota}) >= 70 → else if: "Bom!"`;
+    } else if (nota >= 60) {
+      msg = 'Regular. 📝'; cls = 'warning';
+      java = `nota(${nota}) >= 60 → else if: "Regular."`;
+    } else {
+      msg = 'Reprovado. ❌'; cls = 'danger';
+      java = `nota(${nota}) < 60 → else: "Reprovado."`;
+    }
+
+    out.textContent = `// ${java}  →  saída: "${msg}"`;
+    out.classList.add(cls);
+  }
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText);
+    btn.textContent = 'Copiado!';
+    setTimeout(() => btn.textContent = 'Copiar', 2000);
+  }
+</script>
+</body>
+</html>

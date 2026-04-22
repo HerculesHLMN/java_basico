@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prática Guiada — Scanner e Entrada de Dados · Aula 02</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;color:#1e293b;background:#fdf4ff;min-height:100vh;padding:22px}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:11px}
+.pg-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.pg-title{font-size:17px;font-weight:600}.pg-meta{font-size:12px;color:#64748b;margin-top:2px}
+.pg-time{font-size:12px;font-weight:600;background:#f3e8ff;border:1px solid #d8b4fe;padding:4px 12px;border-radius:8px;color:#7e22ce}
+.prog-row{display:flex;align-items:center;gap:9px}
+.pb{flex:1;height:7px;background:#f3e8ff;border-radius:4px;overflow:hidden}
+.pf{height:100%;background:#9333ea;border-radius:4px;transition:width .4s ease;width:0%}
+.pt{font-size:12px;font-weight:600;color:#64748b;min-width:60px;text-align:right}
+.nivel-sep{display:flex;align-items:center;gap:10px;margin:4px 0}
+.nivel-line{flex:1;height:1px;background:#d8b4fe}
+.nivel-badge{font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap}
+.nivel-badge.b{background:#dcfce7;color:#15803d;border:1px solid #86efac}
+.nivel-badge.m{background:#fef9c3;color:#92400e;border:1px solid #fde047}
+.nivel-badge.a{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.sc{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff;transition:border-color .2s}
+.sc.done-c{border-color:#86efac}.sc.open-c{border-color:#c084fc}
+.sh{display:flex;align-items:flex-start;gap:11px;padding:12px 13px;cursor:pointer;user-select:none;transition:background .15s}
+.sh:hover{background:#f8fafc}.sc.open-c .sh{background:#fdf4ff}
+.chk{width:21px;height:21px;border-radius:6px;border:1.5px solid #cbd5e1;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .18s;cursor:pointer;background:#fff}
+.chk:hover{border-color:#9333ea;background:#fdf4ff}.chk.done{background:#22c55e;border-color:#22c55e}
+.chk svg{display:none}.chk.done svg{display:block}
+.si{flex:1}.sn2{font-size:11px;font-weight:600;color:#94a3b8;margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.st{font-size:13px;font-weight:600;color:#1e293b;line-height:1.3}.stm{font-size:11px;color:#94a3b8;margin-top:2px}
+.cv{color:#94a3b8;font-size:11px;margin-top:4px;transition:transform .22s;flex-shrink:0}
+.sc.open-c .cv{transform:rotate(180deg)}
+.sb{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.sc.open-c .sb{max-height:1800px}
+.sbi{padding:0 13px 14px;border-top:1px solid #f1f5f9}
+.il{display:flex;flex-direction:column;gap:6px;margin:11px 0}
+.ii{display:flex;gap:9px;font-size:13px;color:#475569;line-height:1.55;align-items:flex-start}
+.in{width:19px;height:19px;min-width:19px;border-radius:5px;background:#fdf4ff;color:#9333ea;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:1px}
+code{font-family:'Courier New',monospace;font-size:12px;background:#f1f5f9;padding:1px 5px;border-radius:3px;border:1px solid #e2e8f0}
+.cb2{background:#1e293b;border-radius:8px;padding:12px 15px;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;color:#94a3b8;margin:9px 0;overflow-x:auto;white-space:pre}
+.k{color:#93c5fd}.t{color:#34d399}.v{color:#6ee7b7}.s{color:#fda4af}.c{color:#475569;font-style:italic}.fn{color:#fbbf24}.cl{color:#c4b5fd}.an{color:#fb923c}
+.tip{background:#fdf4ff;border-left:3px solid #9333ea;padding:8px 12px;font-size:12px;color:#581c87;line-height:1.5;margin-top:8px}
+.tip strong{color:#7e22ce;font-weight:600}
+.mb{display:inline-flex;align-items:center;gap:5px;background:#f8fafc;border:1px solid #cbd5e1;color:#64748b;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .18s;margin-top:10px}
+.mb:hover{background:#f0fdf4;color:#15803d;border-color:#86efac}
+.mb.done-btn{background:#f0fdf4;color:#15803d;border-color:#86efac;pointer-events:none}
+.sbox{background:#fdf4ff;border:1px solid #d8b4fe;border-radius:14px;padding:20px;text-align:center;display:none}
+.sbox.show{display:block}
+.sbox h3{font-size:16px;font-weight:600;color:#9333ea;margin-bottom:6px}
+.sbox p{font-size:13px;color:#581c87;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="pg-header">
+    <div><div class="pg-title">Prática guiada — Scanner e Entrada de Dados ⌨️</div><div class="pg-meta">Siga os passos no IDE. Marque cada um quando terminar. Básico → Médio → Avançado.</div></div>
+    <span class="pg-time">65 min disponíveis</span>
+  </div>
+  <div class="prog-row"><div class="pb"><div class="pf" id="pf"></div></div><div class="pt" id="pt">0 / 7</div></div>
+  <div id="steps"></div>
+  <div class="sbox" id="sbox">
+    <h3>⌨️ Tópico 3 concluído!</h3>
+    <p>Scanner, leitura de diferentes tipos e armadilhas do buffer — dominados.<br>Próximo: <strong>Tópico 4 — Estruturas Condicionais (if, else, switch)!</strong></p>
+  </div>
+</div>
+<script>
+const STEPS=[
+// BÁSICO
+{nivel:'b',title:'Primeiro Scanner — lendo um nome e uma idade',time:'7 min',
+instrs:[
+  'Crie <code>PrimeiroScanner.java</code> e adicione no topo: <code>import java.util.Scanner;</code>',
+  'Dentro do main, instancie: <code>Scanner sc = new Scanner(System.in);</code>',
+  'Use <code>System.out.print("Seu nome: ");</code> (sem ln) para manter o cursor na mesma linha',
+  'Leia com <code>String nome = sc.nextLine();</code> e depois <code>int idade = sc.nextInt();</code>',
+  'Imprima uma saudação usando as variáveis e, ao final, chame <code>sc.close();</code>',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">PrimeiroScanner</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+
+        <span class="cl">System</span>.out.print(<span class="s">"Seu nome: "</span>);
+        <span class="cl">String</span> nome = sc.nextLine();
+
+        <span class="cl">System</span>.out.print(<span class="s">"Sua idade: "</span>);
+        <span class="t">int</span> idade = sc.nextInt();
+
+        <span class="cl">System</span>.out.println(<span class="s">"Olá, "</span> + nome + <span class="s">"! Você tem "</span> + idade + <span class="s">" anos."</span>);
+
+        sc.close();
+    }
+}`,
+tip:'<strong>print vs println:</strong> <code>print</code> não pula linha — o cursor fica no final da mensagem, ideal antes de uma entrada do usuário. <code>println</code> pula para a próxima linha. Misture-os: <code>print</code> para prompts de entrada, <code>println</code> para saídas separadas.'},
+
+{nivel:'b',title:'Lendo todos os tipos com Scanner',time:'8 min',
+instrs:[
+  'Crie <code>TodosOsTipos.java</code> com Scanner e leia um dado de cada tipo: <code>String</code>, <code>int</code>, <code>double</code>, <code>boolean</code>',
+  'Use: <code>nextLine()</code> para String, <code>nextInt()</code> para int, <code>nextDouble()</code> para double, <code>nextBoolean()</code> para boolean',
+  'Imprima cada valor lido com seu tipo identificado: <code>"String: " + texto</code>, etc.',
+  'Teste inserir <code>true</code> ou <code>false</code> para o boolean — veja que outras palavras causam InputMismatchException',
+  'Adicione <code>sc.next()</code> para ler uma única palavra (para no espaço) e compare com <code>nextLine()</code>',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">TodosOsTipos</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+
+        <span class="cl">System</span>.out.print(<span class="s">"Texto (uma palavra): "</span>);
+        <span class="cl">String</span>  palavra = sc.next();
+
+        <span class="cl">System</span>.out.print(<span class="s">"Número inteiro: "</span>);
+        <span class="t">int</span>     numero  = sc.nextInt();
+
+        <span class="cl">System</span>.out.print(<span class="s">"Número decimal: "</span>);
+        <span class="t">double</span>  decimal = sc.nextDouble();
+
+        <span class="cl">System</span>.out.print(<span class="s">"Boolean (true/false): "</span>);
+        <span class="t">boolean</span> flag    = sc.nextBoolean();
+
+        <span class="cl">System</span>.out.println(<span class="s">"---Lido---"</span>);
+        <span class="cl">System</span>.out.println(<span class="s">"Palavra : "</span> + palavra);
+        <span class="cl">System</span>.out.println(<span class="s">"Inteiro : "</span> + numero);
+        <span class="cl">System</span>.out.println(<span class="s">"Decimal : "</span> + decimal);
+        <span class="cl">System</span>.out.println(<span class="s">"Boolean : "</span> + flag);
+        sc.close();
+    }
+}`,
+tip:'<strong>nextDouble() e vírgula:</strong> em sistemas com locale pt-BR, o Scanner pode esperar vírgula como separador decimal. Se der erro ao digitar <code>3.14</code>, tente <code>3,14</code>, ou adicione no início do programa: <code>Scanner sc = new Scanner(System.in).useLocale(Locale.US);</code> com <code>import java.util.Locale;</code>.'},
+
+// MÉDIO
+{nivel:'m',title:'A armadilha do nextLine() após nextInt()',time:'9 min',
+instrs:[
+  'Crie <code>ArmadilhaBuffer.java</code> e leia primeiro um <code>int</code> com <code>nextInt()</code>, depois uma String com <code>nextLine()</code>',
+  'Execute e observe: a String é lida como vazia! O <code>nextLine()</code> consome o Enter que sobrou do <code>nextInt()</code>',
+  'Corrija adicionando um <code>sc.nextLine();</code> extra (para limpar o buffer) ANTES de ler a String',
+  'Teste também com <code>nextDouble()</code> antes de <code>nextLine()</code> — o mesmo problema ocorre',
+  'Imprima as variáveis e confirme que agora o nome é lido corretamente',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">ArmadilhaBuffer</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+
+        <span class="cl">System</span>.out.print(<span class="s">"Idade: "</span>);
+        <span class="t">int</span> idade = sc.nextInt();
+
+        sc.nextLine();  <span class="c">// ← consome o '\n' que sobrou no buffer</span>
+
+        <span class="cl">System</span>.out.print(<span class="s">"Nome completo: "</span>);
+        <span class="cl">String</span> nome = sc.nextLine();  <span class="c">// agora funciona corretamente</span>
+
+        <span class="cl">System</span>.out.print(<span class="s">"Altura: "</span>);
+        <span class="t">double</span> altura = sc.nextDouble();
+
+        sc.nextLine();  <span class="c">// limpa o buffer após nextDouble também</span>
+
+        <span class="cl">System</span>.out.print(<span class="s">"Cidade: "</span>);
+        <span class="cl">String</span> cidade = sc.nextLine();
+
+        <span class="cl">System</span>.out.printf(<span class="s">"%s, %d anos, %.2fm, %s%n"</span>, nome, idade, altura, cidade);
+        sc.close();
+    }
+}`,
+tip:'<strong>Regra prática:</strong> sempre que usar <code>nextInt()</code>, <code>nextDouble()</code>, <code>nextLong()</code> ou <code>nextBoolean()</code> e depois quiser usar <code>nextLine()</code>, coloque um <code>sc.nextLine();</code> entre eles para limpar o <code>\\n</code> residual. É um dos bugs mais comuns em Java para iniciantes.'},
+
+{nivel:'m',title:'Leitura em loop — múltiplas entradas',time:'9 min',
+instrs:[
+  'Crie <code>MultiplaEntrada.java</code> e leia 3 notas do usuário usando um padrão de repetição manual (3x o mesmo bloco)',
+  'Para cada nota, exiba um prompt numerado: <code>"Nota 1: "</code>, <code>"Nota 2: "</code>, <code>"Nota 3: "</code>',
+  'Calcule a soma acumulando: <code>soma += nota1; soma += nota2; soma += nota3;</code>',
+  'Calcule a média e determine a maior nota usando operador ternário encadeado',
+  'Exiba um relatório com todas as notas, a soma, a média e a maior nota com <code>printf</code>',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">MultiplaEntrada</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+
+        <span class="cl">System</span>.out.print(<span class="s">"Nota 1: "</span>); <span class="t">double</span> n1 = sc.nextDouble();
+        <span class="cl">System</span>.out.print(<span class="s">"Nota 2: "</span>); <span class="t">double</span> n2 = sc.nextDouble();
+        <span class="cl">System</span>.out.print(<span class="s">"Nota 3: "</span>); <span class="t">double</span> n3 = sc.nextDouble();
+
+        <span class="t">double</span> soma  = n1 + n2 + n3;
+        <span class="t">double</span> media = soma / <span class="v">3.0</span>;
+        <span class="t">double</span> maior = n1 > n2 ? (n1 > n3 ? n1 : n3) : (n2 > n3 ? n2 : n3);
+
+        <span class="cl">System</span>.out.println(<span class="s">"========= Relatório ========="</span>);
+        <span class="cl">System</span>.out.printf(<span class="s">"Notas    : %.1f | %.1f | %.1f%n"</span>, n1, n2, n3);
+        <span class="cl">System</span>.out.printf(<span class="s">"Soma     : %.1f%n"</span>, soma);
+        <span class="cl">System</span>.out.printf(<span class="s">"Média    : %.2f%n"</span>, media);
+        <span class="cl">System</span>.out.printf(<span class="s">"Maior    : %.1f%n"</span>, maior);
+        sc.close();
+    }
+}`,
+tip:'<strong>Sem arrays ainda:</strong> por ora lemos N variáveis separadas. Na Aula 05 aprenderemos arrays, que permitem armazenar quantidades arbitrárias de valores em uma única variável. Perceba como o código repete padrões — isso é exatamente o que o <code>for</code> (Aula 03) vai eliminar.'},
+
+// AVANÇADO
+{nivel:'a',title:'Menu interativo com Scanner',time:'10 min',
+instrs:[
+  'Crie <code>MenuSimples.java</code> e apresente um menu numerado de 3 opções ao usuário (ex: converter moeda, calcular desconto, exibir info)',
+  'Leia a opção com <code>int opcao = sc.nextInt();</code>',
+  'Use <code>if / else if / else</code> para tratar cada opção — para a opção inválida, exiba mensagem de erro',
+  'Para cada opção válida, leia os dados necessários com Scanner e exiba o resultado',
+  'Teste com opcao=1, opcao=2, opcao=3 e opcao=99 — verifique que todos os caminhos funcionam',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">MenuSimples</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+        <span class="k">final</span> <span class="t">double</span> COTACAO = <span class="v">5.15</span>;
+
+        <span class="cl">System</span>.out.println(<span class="s">"===== MENU ====="</span>);
+        <span class="cl">System</span>.out.println(<span class="s">"1. Converter BRL → USD"</span>);
+        <span class="cl">System</span>.out.println(<span class="s">"2. Calcular desconto"</span>);
+        <span class="cl">System</span>.out.println(<span class="s">"3. Calcular IMC"</span>);
+        <span class="cl">System</span>.out.print(<span class="s">"Opção: "</span>);
+        <span class="t">int</span> opcao = sc.nextInt();
+
+        <span class="k">if</span> (opcao == <span class="v">1</span>) {
+            <span class="cl">System</span>.out.print(<span class="s">"Valor em R$: "</span>);
+            <span class="t">double</span> brl = sc.nextDouble();
+            <span class="cl">System</span>.out.printf(<span class="s">"R$ %.2f = U$ %.2f%n"</span>, brl, brl / COTACAO);
+
+        } <span class="k">else if</span> (opcao == <span class="v">2</span>) {
+            <span class="cl">System</span>.out.print(<span class="s">"Preço: R$ "</span>);  <span class="t">double</span> preco = sc.nextDouble();
+            <span class="cl">System</span>.out.print(<span class="s">"Desconto (%): "</span>); <span class="t">double</span> pct = sc.nextDouble();
+            <span class="t">double</span> final_ = preco * (<span class="v">1</span> - pct / <span class="v">100</span>);
+            <span class="cl">System</span>.out.printf(<span class="s">"Preço final: R$ %.2f%n"</span>, final_);
+
+        } <span class="k">else if</span> (opcao == <span class="v">3</span>) {
+            <span class="cl">System</span>.out.print(<span class="s">"Peso(kg): "</span>); <span class="t">double</span> p = sc.nextDouble();
+            <span class="cl">System</span>.out.print(<span class="s">"Altura(m): "</span>); <span class="t">double</span> h = sc.nextDouble();
+            <span class="cl">System</span>.out.printf(<span class="s">"IMC: %.2f%n"</span>, p/(h*h));
+
+        } <span class="k">else</span> {
+            <span class="cl">System</span>.out.println(<span class="s">"Opção inválida!"</span>);
+        }
+        sc.close();
+    }
+}`,
+tip:'<strong>Menus com switch:</strong> este if/else poderia ser reescrito com <code>switch(opcao)</code>, que é mais legível para muitas opções fixas. Porém, switch não aceita ranges (ex: 1 a 5), para isso use if/else. Na Aula 03 adicionaremos um <code>do-while</code> para repetir o menu até o usuário escolher sair.'},
+
+{nivel:'a',title:'Validação básica de entrada',time:'10 min',
+instrs:[
+  'Crie <code>EntradaValidada.java</code> que leia uma nota de 0 a 10 e valide se está no intervalo correto',
+  'Leia com <code>nextDouble()</code> e verifique: <code>if (nota < 0 || nota > 10)</code> — se inválido, exiba mensagem de erro',
+  'Para entradas inválidas, use <code>System.exit(1);</code> para encerrar o programa com código de erro',
+  'Leia também a quantidade de faltas (int, 0 a 60) e valide igualmente',
+  'Combine as validações: nota >= 5.0 AND faltas <= 15 para aprovação, exibindo o motivo se reprovado',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">EntradaValidada</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+
+        <span class="cl">System</span>.out.print(<span class="s">"Nota (0-10): "</span>);
+        <span class="t">double</span> nota = sc.nextDouble();
+        <span class="k">if</span> (nota < <span class="v">0</span> || nota > <span class="v">10</span>) {
+            <span class="cl">System</span>.out.println(<span class="s">"Erro: nota fora do intervalo [0, 10]"</span>);
+            <span class="cl">System</span>.exit(<span class="v">1</span>);
+        }
+
+        <span class="cl">System</span>.out.print(<span class="s">"Faltas (0-60): "</span>);
+        <span class="t">int</span> faltas = sc.nextInt();
+        <span class="k">if</span> (faltas < <span class="v">0</span> || faltas > <span class="v">60</span>) {
+            <span class="cl">System</span>.out.println(<span class="s">"Erro: faltas fora do intervalo [0, 60]"</span>);
+            <span class="cl">System</span>.exit(<span class="v">1</span>);
+        }
+
+        <span class="t">boolean</span> aprovNota  = nota >= <span class="v">5.0</span>;
+        <span class="t">boolean</span> aprovFreq  = faltas <= <span class="v">15</span>;
+
+        <span class="k">if</span> (aprovNota && aprovFreq)
+            <span class="cl">System</span>.out.printf(<span class="s">"APROVADO — nota %.1f, %d faltas%n"</span>, nota, faltas);
+        <span class="k">else</span> {
+            <span class="cl">System</span>.out.println(<span class="s">"REPROVADO por:"</span>);
+            <span class="k">if</span> (!aprovNota)  <span class="cl">System</span>.out.printf(<span class="s">"  nota %.1f < 5.0%n"</span>, nota);
+            <span class="k">if</span> (!aprovFreq)  <span class="cl">System</span>.out.printf(<span class="s">"  %d faltas > 15%n"</span>, faltas);
+        }
+        sc.close();
+    }
+}`,
+tip:'<strong>System.exit(código):</strong> encerra o programa imediatamente. Código <code>0</code> = sucesso, <code>1</code> (ou qualquer diferente de 0) = erro. Útil para validações que impedem a continuação. Em aplicações maiores, prefira lançar exceções (<code>throw new IllegalArgumentException(...)</code>) — veremos em Aulas futuras.'},
+
+{nivel:'a',title:'Mini desafio — formulário de inscrição',time:'10 min',
+instrs:[
+  'Crie <code>Inscricao.java</code> — simule um formulário de inscrição em um curso lendo: nome completo, email (String), idade (int), renda mensal (double), tem computador (boolean)',
+  'Após a leitura, calcule: faixa etária (até 17: "Menor", 18-25: "Jovem adulto", 26-40: "Adulto", 41+: "Sênior")',
+  'Determine elegibilidade para bolsa: renda <= 2500 AND tem computador AND idade >= 16',
+  'Use <code>sc.nextLine()</code> corretamente para ler o nome completo com espaços após um <code>nextInt</code> anterior',
+  'Exiba um comprovante de inscrição formatado com todos os dados e o resultado da elegibilidade',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">Inscricao</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+
+        <span class="cl">System</span>.out.print(<span class="s">"Nome completo: "</span>);   <span class="cl">String</span>  nome   = sc.nextLine();
+        <span class="cl">System</span>.out.print(<span class="s">"E-mail: "</span>);           <span class="cl">String</span>  email  = sc.nextLine();
+        <span class="cl">System</span>.out.print(<span class="s">"Idade: "</span>);             <span class="t">int</span>     idade  = sc.nextInt();
+        <span class="cl">System</span>.out.print(<span class="s">"Renda mensal: R$ "</span>);   <span class="t">double</span>  renda  = sc.nextDouble();
+        <span class="cl">System</span>.out.print(<span class="s">"Tem computador? "</span>);    <span class="t">boolean</span> pc     = sc.nextBoolean();
+
+        <span class="cl">String</span> faixa;
+        <span class="k">if</span>      (idade <  <span class="v">18</span>) faixa = <span class="s">"Menor"</span>;
+        <span class="k">else if</span> (idade <= <span class="v">25</span>) faixa = <span class="s">"Jovem adulto"</span>;
+        <span class="k">else if</span> (idade <= <span class="v">40</span>) faixa = <span class="s">"Adulto"</span>;
+        <span class="k">else</span>                   faixa = <span class="s">"Sênior"</span>;
+
+        <span class="t">boolean</span> bolsa = renda <= <span class="v">2500</span> && pc && idade >= <span class="v">16</span>;
+
+        <span class="cl">System</span>.out.println(<span class="s">"\n===== COMPROVANTE ====="</span>);
+        <span class="cl">System</span>.out.printf(<span class="s">"Nome   : %s%n"</span>, nome);
+        <span class="cl">System</span>.out.printf(<span class="s">"E-mail : %s%n"</span>, email);
+        <span class="cl">System</span>.out.printf(<span class="s">"Faixa  : %s (%d anos)%n"</span>, faixa, idade);
+        <span class="cl">System</span>.out.printf(<span class="s">"Bolsa  : %s%n"</span>, bolsa ? <span class="s">"ELEGÍVEL ✓"</span> : <span class="s">"Não elegível"</span>);
+        sc.close();
+    }
+}`,
+tip:'<strong>Ordem importa:</strong> quando o formulário começa com <code>nextLine()</code> (nome), não há problema de buffer. O problema ocorre quando um método <em>numérico</em> vem ANTES de <code>nextLine()</code>. Organize o formulário colocando os campos de texto primeiro, ou lembre de sempre usar o <code>sc.nextLine()</code> de limpeza.'}
+];
+
+let done=new Set();
+function build(){
+  const list=document.getElementById('steps');
+  let prevNivel='';
+  STEPS.forEach((s,i)=>{
+    if(s.nivel!==prevNivel){
+      const sep=document.createElement('div');sep.className='nivel-sep';
+      const labels={b:'🟢 Nível Básico',m:'🟡 Nível Médio',a:'🔴 Nível Avançado'};
+      sep.innerHTML=`<div class="nivel-line"></div><span class="nivel-badge ${s.nivel}">${labels[s.nivel]}</span><div class="nivel-line"></div>`;
+      list.appendChild(sep);prevNivel=s.nivel;
+    }
+    const card=document.createElement('div');card.className='sc'+(i===0?' open-c':'');card.id='sc-'+i;
+    card.innerHTML=`<div class="sh" onclick="tog(${i})"><div class="chk" id="chk-${i}" onclick="event.stopPropagation();mk(${i})"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="si"><div class="sn2">Passo ${i+1} de ${STEPS.length}</div><div class="st">${s.title}</div><div class="stm">${s.time}</div></div><span class="cv">${i===0?'▲':'▼'}</span></div><div class="sb"><div class="sbi"><div class="il">${s.instrs.map((t,j)=>`<div class="ii"><div class="in">${j+1}</div><span>${t}</span></div>`).join('')}</div>${s.code?`<div class="cb2">${s.code}</div>`:''}<div class="tip">${s.tip}</div><button class="mb" id="mb-${i}" onclick="mk(${i})"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3.5 3.5 5.5-5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Marcar como concluído</button></div></div>`;
+    list.appendChild(card);
+  });
+}
+function tog(i){const c=document.getElementById('sc-'+i);const o=c.classList.contains('open-c');document.querySelectorAll('.sc').forEach(x=>{x.classList.remove('open-c');x.querySelector('.cv').textContent='▼';});if(!o){c.classList.add('open-c');c.querySelector('.cv').textContent='▲';}}
+function mk(i){if(done.has(i))return;done.add(i);document.getElementById('chk-'+i).classList.add('done');document.getElementById('sc-'+i).classList.add('done-c');const mb=document.getElementById('mb-'+i);mb.classList.add('done-btn');mb.innerHTML='<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3.5 3.5 5.5-5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Concluído!';upd();if(i<STEPS.length-1){document.querySelectorAll('.sc').forEach(x=>{x.classList.remove('open-c');x.querySelector('.cv').textContent='▼';});const nx=document.getElementById('sc-'+(i+1));nx.classList.add('open-c');nx.querySelector('.cv').textContent='▲';setTimeout(()=>nx.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}if(done.size===STEPS.length)document.getElementById('sbox').classList.add('show');}
+function upd(){document.getElementById('pf').style.width=Math.round((done.size/STEPS.length)*100)+'%';document.getElementById('pt').textContent=done.size+' / '+STEPS.length;}
+build();upd();
+</script>
+
+<div style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #d8b4fe;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:999;gap:12px">
+  <a href="java_a02_pratica_operadores.html" style="display:inline-flex;align-items:center;gap:7px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;transition:background .15s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">← Tópico 2</a>
+  <div style="font-size:11px;color:#94a3b8;font-family:'Courier New',monospace;text-align:center;flex:1">Aula 02 · Tópico 3 · Scanner e Entrada de Dados</div>
+  <a href="java_a02_pratica_condicionais.html" style="display:inline-flex;align-items:center;gap:7px;background:#9333ea;color:#fff;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='#7e22ce'" onmouseout="this.style.background='#9333ea'">Próximo Tópico →</a>
+</div>
+<div style="height:52px"></div>
+</body>
+</html>

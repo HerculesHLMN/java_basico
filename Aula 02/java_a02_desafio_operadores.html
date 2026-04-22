@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafio — Operadores · Aula 02</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;color:#1e293b;background:#eff6ff;min-height:100vh;padding:22px}
+.wrap{max-width:940px;margin:0 auto;display:flex;flex-direction:column;gap:11px}
+.brief{border:1px solid #93c5fd;border-radius:12px;overflow:hidden;background:#fff}
+.bt{background:#eff6ff;padding:17px 19px;border-bottom:1px solid #93c5fd}
+.badge{font-size:11px;font-weight:600;background:#2563eb;color:#fff;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:7px}
+.btitle{font-size:19px;font-weight:600;color:#1e3a8a;margin-bottom:3px}
+.bsub{font-size:13px;color:#1d4ed8}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.two{grid-template-columns:1fr}}
+.colt{font-size:11px;font-weight:600;color:#64748b;margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em}
+.req-wrap{display:flex;flex-direction:column;gap:5px}
+.ri2{display:flex;gap:9px;align-items:flex-start}
+.rc{width:19px;height:19px;min-width:19px;border-radius:5px;border:1.5px solid #cbd5e1;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:2px;background:#fff;transition:all .15s;flex-shrink:0}
+.rc:hover{border-color:#2563eb;background:#eff6ff}.rc.on{background:#22c55e;border-color:#22c55e}
+.rc svg{display:none}.rc.on svg{display:block}
+.rt2{font-size:12.5px;color:#475569;line-height:1.5}.rt2.done{color:#94a3b8;text-decoration:line-through}
+code{font-family:'Courier New',monospace;font-size:11.5px;background:#f1f5f9;padding:1px 5px;border-radius:3px;border:1px solid #e2e8f0}
+.crit-list{display:flex;flex-direction:column;gap:5px}
+.ci{display:flex;align-items:flex-start;gap:7px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:7px 10px;font-size:12px;color:#475569}
+.cd{width:5px;height:5px;min-width:5px;border-radius:50%;background:#2563eb;flex-shrink:0;margin-top:5px}
+.cd.g{background:#22c55e}
+.pw{border:1px solid #e2e8f0;border-radius:12px;padding:13px 15px;background:#fff}
+.pl{font-size:12px;color:#64748b;margin-bottom:7px;display:flex;justify-content:space-between}
+.pl strong{color:#1e293b;font-weight:600}
+.pbg{height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin-bottom:9px}
+.pfill{height:100%;background:#2563eb;border-radius:4px;transition:width .4s ease;width:0%}
+.pm{font-size:12px;color:#64748b;font-style:italic}
+.tr{display:flex;align-items:center;gap:9px;border:1px solid #93c5fd;border-radius:12px;padding:11px 15px;background:#fff;flex-wrap:wrap}
+.tnum{font-size:26px;font-weight:500;font-family:'Courier New',monospace;color:#2563eb;min-width:80px;transition:color .3s}
+.tnum.warn{color:#d97706}.tnum.danger{color:#dc2626}
+.tinfo{flex:1;min-width:130px}.tinfo p{font-size:12px;color:#64748b;margin-top:1px}
+.tinfo strong{font-size:13px;color:#1e293b;font-weight:600}
+.tbtn{font-size:12px;padding:6px 14px;border-radius:7px;border:none;background:#2563eb;color:#fff;cursor:pointer;font-family:inherit;transition:background .15s;white-space:nowrap}
+.tbtn:hover{background:#1d4ed8}.tbtn.sec{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+.tbtn.sec:hover{background:#e2e8f0}.tbtn:disabled{opacity:.4;pointer-events:none}
+.tabs{display:flex;gap:0;border-bottom:1px solid #93c5fd;overflow-x:auto}
+.tab{font-size:12px;font-weight:600;padding:9px 16px;cursor:pointer;color:#64748b;transition:all .15s;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.on{color:#1d4ed8;border-bottom-color:#2563eb}
+.tab:hover:not(.on){color:#2563eb}
+.tab-pane{display:none;padding:16px 19px}
+.tab-pane.on{display:block}
+.desc-txt{font-size:13px;color:#475569;line-height:1.8}
+.desc-txt strong{color:#1e293b;font-weight:600}
+.code-blk{background:#1e293b;border-radius:8px;padding:13px 16px;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;color:#94a3b8;margin:10px 0;overflow-x:auto;white-space:pre}
+.k{color:#93c5fd}.t{color:#34d399}.v{color:#6ee7b7}.s{color:#fda4af}.c{color:#475569;font-style:italic}.fn{color:#fbbf24}.cl{color:#c4b5fd}.an{color:#fb923c}
+.ent{border:1px solid #93c5fd;border-radius:12px;padding:13px 15px;background:#eff6ff}
+.et{font-size:11px;font-weight:600;color:#1d4ed8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.ep{font-size:13px;color:#475569;line-height:1.8}
+.sbox{display:none;background:#eff6ff;border:2px solid #93c5fd;border-radius:14px;padding:22px;text-align:center}
+.sbox.show{display:block;animation:pop .4s ease}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.sbox h3{font-size:18px;font-weight:700;color:#2563eb;margin-bottom:7px}
+.sbox p{font-size:13px;color:#1e3a8a;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brief">
+    <div class="bt">
+      <div class="badge">Desafio autônomo · 3 Níveis · 60 minutos</div>
+      <div class="btitle">🏎️ Pit Stop — Calculadora de Corrida de Fórmula</div>
+      <div class="bsub">operadores aritméticos, relacionais, lógicos, módulo, incremento, ternário e precedência em um contexto de automobilismo.</div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab on" onclick="showTab(0)">🟢 Básico</div>
+      <div class="tab" onclick="showTab(1)">🟡 Médio</div>
+      <div class="tab" onclick="showTab(2)">🔴 Avançado</div>
+    </div>
+
+    <div class="tab-pane on" id="tp0">
+      <div class="desc-txt">
+        <strong>Nível Básico — 15 min</strong><br><br>
+        Crie <code>CorridaBasica.java</code>. Declare variáveis fixas de uma corrida de Fórmula e calcule estatísticas simples usando apenas operadores aritméticos.<br><br>
+        <strong>Dados fixos da corrida:</strong><br>
+        &nbsp;&nbsp;• <code>int totalVoltas = 57</code><br>
+        &nbsp;&nbsp;• <code>int voltasCompletas = 38</code><br>
+        &nbsp;&nbsp;• <code>double tempoVoltaMedia = 91.4</code> — segundos<br>
+        &nbsp;&nbsp;• <code>double combustivelInicial = 110.0</code> — litros<br>
+        &nbsp;&nbsp;• <code>double consumoPorVolta = 1.85</code> — litros/volta<br><br>
+        <strong>Calcule e exiba:</strong><br>
+        &nbsp;&nbsp;1. Voltas restantes: <code>totalVoltas - voltasCompletas</code><br>
+        &nbsp;&nbsp;2. % corrida concluída: <code>voltasCompletas * 100 / totalVoltas</code> (inteiro) e como double com cast<br>
+        &nbsp;&nbsp;3. Combustível consumido: <code>voltasCompletas * consumoPorVolta</code><br>
+        &nbsp;&nbsp;4. Combustível restante: <code>combustivelInicial - consumido</code><br>
+        &nbsp;&nbsp;5. Tempo já decorrido: <code>voltasCompletas * tempoVoltaMedia</code> → converta para min:seg<br><br>
+        <strong>Saída esperada:</strong>
+      </div>
+      <div class="code-blk">══ STATUS DA CORRIDA ════════
+Voltas     : 38 / 57
+Restantes  : 19 voltas
+Progresso  : 66% (66.67%)
+Combustível: 29.70 L usados / 80.30 L restantes
+Tempo      : 57 min 49 seg decorridos</div>
+    </div>
+
+    <div class="tab-pane" id="tp1">
+      <div class="desc-txt">
+        <strong>Nível Médio — 20 min</strong><br><br>
+        Crie <code>PitStop.java</code>. Mantenha os dados fixos e adicione a <strong>lógica de pit stop</strong> usando operadores relacionais, lógicos e módulo.<br><br>
+        <strong>Regras do pit stop (calcule com booleanos):</strong><br>
+        &nbsp;&nbsp;• <code>boolean precisaCombustivel = combustivelRestante < 30.0</code><br>
+        &nbsp;&nbsp;• <code>boolean precisaPneu = voltasCompletas % 15 == 0</code> — troca a cada 15 voltas<br>
+        &nbsp;&nbsp;• <code>boolean dentroDoSafetyCar = voltasCompletas >= 20 && voltasCompletas <= 25</code><br>
+        &nbsp;&nbsp;• <code>boolean pitObrigatorio = precisaCombustivel || precisaPneu</code><br>
+        &nbsp;&nbsp;• <code>boolean pitIdeal = pitObrigatorio && !dentroDoSafetyCar</code><br><br>
+        <strong>Use incremento/decremento:</strong><br>
+        &nbsp;&nbsp;• Simule 3 pit stops: a cada pit, <code>paradas++</code>, <code>voltasCompletas += 1</code><br>
+        &nbsp;&nbsp;• Mostre o estado antes e depois de cada parada<br><br>
+        <strong>Teste com voltasCompletas=30:</strong><br>
+        → precisaCombustivel=false, precisaPneu=true (30%15==0), pitObrigatorio=true
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tp2">
+      <div class="desc-txt">
+        <strong>Nível Avançado — 25 min</strong><br><br>
+        Crie <code>CorridaCompleta.java</code>. Integre tudo e calcule a <strong>classificação final</strong> usando operadores bit a bit para flags de penalidade.<br><br>
+        1. <strong>Flags de penalidade</strong> (use operadores bit a bit):
+        <div class="code-blk"><span class="k">final</span> <span class="t">int</span> PEN_VELOCIDADE  = <span class="v">1</span>;   <span class="c">// 0001 — excesso de velocidade</span>
+<span class="k">final</span> <span class="t">int</span> PEN_COLISAO     = <span class="v">2</span>;   <span class="c">// 0010 — colisão</span>
+<span class="k">final</span> <span class="t">int</span> PEN_PITLANE     = <span class="v">4</span>;   <span class="c">// 0100 — speeding no pitlane</span>
+<span class="k">final</span> <span class="t">int</span> PEN_BANDEIRA    = <span class="v">8</span>;   <span class="c">// 1000 — ignorou bandeira</span>
+
+<span class="t">int</span> penalidades = PEN_VELOCIDADE | PEN_PITLANE;  <span class="c">// piloto levou 2 penalidades</span></div>
+        2. <strong>Cálculo de pontuação:</strong> posição final determina pontos (use ternário aninhado)<br>
+        &nbsp;&nbsp;→ 1°=25, 2°=18, 3°=15, 4°=12, 5°=10, 6°+=0<br>
+        &nbsp;&nbsp;→ Se tiver PEN_COLISAO: pontos -= 5; se PEN_BANDEIRA: pontos -= 10<br><br>
+        3. <strong>Relatório final</strong> com posição, tempo total, número de pit stops, penalidades ativas e pontos marcados<br><br>
+        <strong>Saída esperada (trecho):</strong>
+      </div>
+      <div class="code-blk">══ RESULTADO FINAL ══════════════════
+Piloto        : Verstappen
+Posição       : 1º lugar
+Voltas        : 57 / 57
+Pit stops     : 2
+Tempo total   : 86 min 20 seg
+──────────────────────────────────────
+PENALIDADES:
+  Excesso veloc: SIM  (+5s)
+  Colisão      : NÃO
+  Speeding pit : SIM  (+5s)
+  Bandeira     : NÃO
+Tempo c/penalt: 86 min 30 seg
+──────────────────────────────────────
+Pontos marcados: 25</div>
+
+        <div class="two" style="margin-top:14px">
+          <div>
+            <div class="colt">Critérios de avaliação</div>
+            <div class="crit-list">
+              <div class="ci"><div class="cd"></div>Operador <code>%</code> usado para verificar múltiplos de 15</div>
+              <div class="ci"><div class="cd"></div>Booleanos combinados com <code>&&</code>, <code>||</code>, <code>!</code></div>
+              <div class="ci"><div class="cd"></div>Incremento <code>++</code> e <code>+=</code> usados corretamente</div>
+              <div class="ci"><div class="cd"></div>Ternário aninhado para pontuação por posição</div>
+              <div class="ci"><div class="cd"></div>Operadores bit a bit <code>|</code> e <code>&</code> para penalidades</div>
+              <div class="ci"><div class="cd g"></div>Bônus: calcular velocidade média da corrida em km/h</div>
+              <div class="ci"><div class="cd g"></div>Bônus: prever volta em que precisará do próximo pit stop</div>
+            </div>
+          </div>
+          <div>
+            <div class="colt">Checklist de entrega</div>
+            <div class="req-wrap" id="req-list"></div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="ent">
+    <div class="et">Referências rápidas</div>
+    <div class="ep">
+      <strong>Converter segundos em min:seg:</strong> <code>int min = (int)(totalSeg / 60); int seg = (int)(totalSeg % 60);</code><br>
+      <strong>Porcentagem com int:</strong> <code>38 * 100 / 57 = 66</code> (divisão inteira, trunca). Com double: <code>(double)38 / 57 * 100 = 66.67</code><br>
+      <strong>Testar flag bit a bit:</strong> <code>(penalidades & PEN_COLISAO) != 0</code> → true se a penalidade está ativa<br><br>
+      <strong>Valores de teste:</strong> 57 voltas total, 38 completas, volta média=91.4s, combustível=110L, consumo=1.85L/volta<br>
+      → restante=80.3L | tempo=3469.2s=57min49seg | progresso=66.67%
+    </div>
+  </div>
+
+  <div class="pw">
+    <div class="pl"><strong>Progresso</strong><span id="ptxt">0 de 8 concluídos</span></div>
+    <div class="pbg"><div class="pfill" id="pfill"></div></div>
+    <div class="pm" id="pmsg">Comece pelo nível básico: declare os dados e calcule as estatísticas.</div>
+  </div>
+
+  <div class="tr">
+    <div class="tnum" id="tnum">60:00</div>
+    <div class="tinfo"><strong>Cronômetro</strong><p id="tmsg">Inicie quando o docente autorizar</p></div>
+    <button class="tbtn" id="tbtn" onclick="timerClick()">Iniciar</button>
+    <button class="tbtn sec" onclick="timerReset()">Zerar</button>
+  </div>
+
+  <div class="sbox" id="success">
+    <h3>🏎️ Bandeirada!</h3>
+    <p>Operadores aritméticos, lógicos, módulo, bit a bit e ternário — dominados!<br>Próximo desafio: <strong>Scanner — Sistema de Agência de Viagens!</strong></p>
+  </div>
+</div>
+
+<script>
+const REQS=[
+  {t:'Criar <code>CorridaBasica.java</code> e calcular os 5 itens básicos (voltas, progresso, combustível, tempo)'},
+  {t:'Converter tempo total para formato <code>min:seg</code> usando divisão inteira e <code>%</code>'},
+  {t:'Criar <code>PitStop.java</code> com os 5 booleanos de pit stop calculados corretamente'},
+  {t:'Usar <code>voltasCompletas % 15 == 0</code> para detecção de troca de pneu'},
+  {t:'Simular 3 pit stops com <code>paradas++</code> e <code>voltasCompletas += 1</code>, exibindo estado antes/depois'},
+  {t:'Criar <code>CorridaCompleta.java</code> com as 4 constantes de penalidade e flags bit a bit'},
+  {t:'Calcular pontos por posição com ternário aninhado (1°=25, 2°=18, 3°=15...)'},
+  {t:'Relatório final alinhado com penalidades ativas e tempo com acréscimos'},
+];
+const MSGS=[
+  'Declare os dados da corrida e calcule voltas restantes e % de progresso.',
+  'Ótimo! Agora converta o tempo total para min:seg com divisão inteira e %.',
+  'Básico pronto! Crie PitStop.java e calcule os 5 booleanos.',
+  'Booleanos ok! Adicione a simulação dos 3 pit stops com ++ e +=.',
+  'Médio concluído! Crie CorridaCompleta.java com as flags de penalidade.',
+  'Flags criadas! Use | para combinar e & para verificar penalidades.',
+  'Penalidades ok! Calcule os pontos com ternário aninhado por posição.',
+  'Tudo pronto! Verifique a saída formatada e mostre ao docente.',
+];
+const TOTAL_SEC = 60*60;
+let done=new Set(),ticking=false,tSec=TOTAL_SEC,tInterval=null;
+function showTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',i===j));
+  document.querySelectorAll('.tab-pane').forEach((p,j)=>p.classList.toggle('on',i===j));
+}
+function buildReqs(){
+  const el=document.getElementById('req-list');
+  REQS.forEach((r,i)=>{
+    const d=document.createElement('div');d.className='ri2';d.style.marginBottom='5px';
+    d.innerHTML=`<div class="rc" id="rc-${i}" onclick="chk(${i})"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="rt2" id="rt-${i}">${r.t}</div>`;
+    el.appendChild(d);
+  });
+}
+function chk(i){
+  if(done.has(i)){done.delete(i);document.getElementById('rc-'+i).classList.remove('on');document.getElementById('rt-'+i).classList.remove('done');}
+  else{done.add(i);document.getElementById('rc-'+i).classList.add('on');document.getElementById('rt-'+i).classList.add('done');}
+  const n=done.size;
+  document.getElementById('pfill').style.width=Math.round((n/REQS.length)*100)+'%';
+  document.getElementById('ptxt').textContent=n+' de '+REQS.length+' concluídos';
+  document.getElementById('pmsg').textContent=MSGS[Math.min(n,MSGS.length-1)];
+  if(n===REQS.length)document.getElementById('success').classList.add('show');
+  else document.getElementById('success').classList.remove('show');
+}
+function timerClick(){
+  if(!ticking){
+    ticking=true;document.getElementById('tbtn').textContent='Pausar';document.getElementById('tbtn').style.background='#475569';
+    document.getElementById('tmsg').textContent='Em andamento';
+    tInterval=setInterval(()=>{
+      tSec--;const m=Math.floor(tSec/60),s=tSec%60;
+      const el=document.getElementById('tnum');
+      el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+      el.className='tnum'+(tSec<=120?' danger':tSec<=600?' warn':'');
+      if(tSec===1800)document.getElementById('tmsg').textContent='30 min — básico e médio prontos?';
+      if(tSec===600)document.getElementById('tmsg').textContent='10 min — finalize e teste!';
+      if(tSec===120)document.getElementById('tmsg').textContent='2 min — chame o docente!';
+      if(tSec<=0){clearInterval(tInterval);ticking=false;document.getElementById('tbtn').disabled=true;document.getElementById('tmsg').textContent='Tempo esgotado!';}
+    },1000);
+  }else{
+    ticking=false;clearInterval(tInterval);
+    document.getElementById('tbtn').textContent='Continuar';document.getElementById('tbtn').style.background='#2563eb';
+  }
+}
+function timerReset(){
+  clearInterval(tInterval);ticking=false;tSec=TOTAL_SEC;
+  document.getElementById('tnum').textContent='60:00';document.getElementById('tnum').className='tnum';
+  document.getElementById('tbtn').textContent='Iniciar';document.getElementById('tbtn').style.background='#2563eb';
+  document.getElementById('tbtn').disabled=false;
+  document.getElementById('tmsg').textContent='Inicie quando o docente autorizar';
+}
+buildReqs();
+</script>
+
+<div style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #93c5fd;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:999;gap:12px">
+  <a href="java_a02_pratica_operadores.html" style="display:inline-flex;align-items:center;gap:7px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;transition:background .15s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">← Prática Guiada</a>
+  <div style="font-size:11px;color:#94a3b8;font-family:'Courier New',monospace;text-align:center;flex:1">Aula 02 · Tópico 2 · Desafio — Operadores</div>
+  <a href="java_a02_desafio_scanner.html" style="display:inline-flex;align-items:center;gap:7px;background:#2563eb;color:#fff;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">Próximo Desafio →</a>
+</div>
+<div style="height:52px"></div>
+</body>
+</html>

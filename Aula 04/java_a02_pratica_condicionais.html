@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prática Guiada — Condicionais · Aula 02</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;color:#1e293b;background:#fff7f0;min-height:100vh;padding:22px}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:11px}
+.pg-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.pg-title{font-size:17px;font-weight:600}.pg-meta{font-size:12px;color:#64748b;margin-top:2px}
+.pg-time{font-size:12px;font-weight:600;background:#ffedd5;border:1px solid #fdba74;padding:4px 12px;border-radius:8px;color:#c2410c}
+.prog-row{display:flex;align-items:center;gap:9px}
+.pb{flex:1;height:7px;background:#ffedd5;border-radius:4px;overflow:hidden}
+.pf{height:100%;background:#ea580c;border-radius:4px;transition:width .4s ease;width:0%}
+.pt{font-size:12px;font-weight:600;color:#64748b;min-width:60px;text-align:right}
+.nivel-sep{display:flex;align-items:center;gap:10px;margin:4px 0}
+.nivel-line{flex:1;height:1px;background:#fdba74}
+.nivel-badge{font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap}
+.nivel-badge.b{background:#dcfce7;color:#15803d;border:1px solid #86efac}
+.nivel-badge.m{background:#fef9c3;color:#92400e;border:1px solid #fde047}
+.nivel-badge.a{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.sc{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff;transition:border-color .2s}
+.sc.done-c{border-color:#86efac}.sc.open-c{border-color:#fb923c}
+.sh{display:flex;align-items:flex-start;gap:11px;padding:12px 13px;cursor:pointer;user-select:none;transition:background .15s}
+.sh:hover{background:#f8fafc}.sc.open-c .sh{background:#fff7f0}
+.chk{width:21px;height:21px;border-radius:6px;border:1.5px solid #cbd5e1;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .18s;cursor:pointer;background:#fff}
+.chk:hover{border-color:#ea580c;background:#fff7f0}.chk.done{background:#22c55e;border-color:#22c55e}
+.chk svg{display:none}.chk.done svg{display:block}
+.si{flex:1}.sn2{font-size:11px;font-weight:600;color:#94a3b8;margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.st{font-size:13px;font-weight:600;color:#1e293b;line-height:1.3}.stm{font-size:11px;color:#94a3b8;margin-top:2px}
+.cv{color:#94a3b8;font-size:11px;margin-top:4px;transition:transform .22s;flex-shrink:0}
+.sc.open-c .cv{transform:rotate(180deg)}
+.sb{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.sc.open-c .sb{max-height:1800px}
+.sbi{padding:0 13px 14px;border-top:1px solid #f1f5f9}
+.il{display:flex;flex-direction:column;gap:6px;margin:11px 0}
+.ii{display:flex;gap:9px;font-size:13px;color:#475569;line-height:1.55;align-items:flex-start}
+.in{width:19px;height:19px;min-width:19px;border-radius:5px;background:#fff7f0;color:#ea580c;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:1px}
+code{font-family:'Courier New',monospace;font-size:12px;background:#f1f5f9;padding:1px 5px;border-radius:3px;border:1px solid #e2e8f0}
+.cb2{background:#1e293b;border-radius:8px;padding:12px 15px;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;color:#94a3b8;margin:9px 0;overflow-x:auto;white-space:pre}
+.k{color:#93c5fd}.t{color:#34d399}.v{color:#6ee7b7}.s{color:#fda4af}.c{color:#475569;font-style:italic}.fn{color:#fbbf24}.cl{color:#c4b5fd}.an{color:#fb923c}
+.tip{background:#fff7f0;border-left:3px solid #ea580c;padding:8px 12px;font-size:12px;color:#7c2d12;line-height:1.5;margin-top:8px}
+.tip strong{color:#c2410c;font-weight:600}
+.mb{display:inline-flex;align-items:center;gap:5px;background:#f8fafc;border:1px solid #cbd5e1;color:#64748b;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .18s;margin-top:10px}
+.mb:hover{background:#f0fdf4;color:#15803d;border-color:#86efac}
+.mb.done-btn{background:#f0fdf4;color:#15803d;border-color:#86efac;pointer-events:none}
+.sbox{background:#fff7f0;border:1px solid #fdba74;border-radius:14px;padding:20px;text-align:center;display:none}
+.sbox.show{display:block}
+.sbox h3{font-size:16px;font-weight:600;color:#ea580c;margin-bottom:6px}
+.sbox p{font-size:13px;color:#7c2d12;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="pg-header">
+    <div><div class="pg-title">Prática guiada — Estruturas Condicionais 🔀</div><div class="pg-meta">Siga os passos no IDE. Marque cada um quando terminar. Básico → Médio → Avançado.</div></div>
+    <span class="pg-time">70 min disponíveis</span>
+  </div>
+  <div class="prog-row"><div class="pb"><div class="pf" id="pf"></div></div><div class="pt" id="pt">0 / 7</div></div>
+  <div id="steps"></div>
+  <div class="sbox" id="sbox">
+    <h3>🔀 Aula 02 concluída!</h3>
+    <p>if, else if, else, switch e operador ternário — dominados.<br>Próximo: <strong>Aula 03 — Laços de Repetição (for, while, do-while)!</strong></p>
+  </div>
+</div>
+<script>
+const STEPS=[
+// BÁSICO
+{nivel:'b',title:'if simples — a porta de entrada das decisões',time:'7 min',
+instrs:[
+  'Crie <code>IfSimples.java</code> e declare <code>int temperatura = 35;</code>',
+  'Escreva um if que imprime <code>"Dia quente!"</code> se a temperatura for maior que 30',
+  'Adicione um else que imprime <code>"Temperatura agradável."</code>',
+  'Troque o valor para <code>22</code> e execute novamente — confirme que o else é executado',
+  'Experimente <code>temperatura == 30</code> — observe que 30 não é maior que 30, cai no else',
+],
+code:`<span class="k">public class</span> <span class="cl">IfSimples</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+
+        <span class="t">int</span> temperatura = <span class="v">35</span>;
+
+        <span class="k">if</span> (temperatura > <span class="v">30</span>) {
+            <span class="cl">System</span>.out.println(<span class="s">"Dia quente! 🌞"</span>);
+        } <span class="k">else</span> {
+            <span class="cl">System</span>.out.println(<span class="s">"Temperatura agradável. 😊"</span>);
+        }
+
+        <span class="c">// Teste com outros valores: 22, 30, 31, -5</span>
+        <span class="t">boolean</span> acimaDe30 = temperatura > <span class="v">30</span>;
+        <span class="cl">System</span>.out.println(<span class="s">"Acima de 30? "</span> + acimaDe30);
+    }
+}`,
+tip:'<strong>As chaves {} são opcionais</strong> quando o bloco tem apenas uma instrução — <code>if (x > 0) System.out.println("positivo");</code> é válido. Mas <strong>sempre use chaves</strong>, mesmo para uma linha. Sem elas, adicionar uma segunda instrução ao if sem perceber é uma fonte clássica de bugs difíceis de encontrar.'},
+
+{nivel:'b',title:'else if em cadeia — múltiplas faixas',time:'8 min',
+instrs:[
+  'Crie <code>ClassificaIdade.java</code> e leia uma idade com Scanner',
+  'Use if/else if/else para classificar: menor de 13 → "Criança", 13-17 → "Adolescente", 18-59 → "Adulto", 60+ → "Idoso"',
+  'Adicione uma validação: se a idade for negativa, imprima "Idade inválida" e encerre',
+  'Execute com os valores: 8, 15, 30, 65, -1 — verifique que cada um cai no bloco correto',
+  'Observe que ao entrar em um else if, os demais NÃO são verificados (curto-circuito)',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">ClassificaIdade</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+        <span class="cl">System</span>.out.print(<span class="s">"Idade: "</span>);
+        <span class="t">int</span> idade = sc.nextInt();
+
+        <span class="k">if</span> (idade < <span class="v">0</span>) {
+            <span class="cl">System</span>.out.println(<span class="s">"Idade inválida!"</span>);
+        } <span class="k">else if</span> (idade < <span class="v">13</span>) {
+            <span class="cl">System</span>.out.println(<span class="s">"Criança 🧒"</span>);
+        } <span class="k">else if</span> (idade < <span class="v">18</span>) {
+            <span class="cl">System</span>.out.println(<span class="s">"Adolescente 🙋"</span>);
+        } <span class="k">else if</span> (idade < <span class="v">60</span>) {
+            <span class="cl">System</span>.out.println(<span class="s">"Adulto 👔"</span>);
+        } <span class="k">else</span> {
+            <span class="cl">System</span>.out.println(<span class="s">"Idoso 🧓"</span>);
+        }
+        sc.close();
+    }
+}`,
+tip:'<strong>Ordem importa no else if!</strong> As condições são testadas de cima para baixo e param na primeira verdadeira. Por isso, ordene do mais restritivo ao menos: verifica <code>< 13</code> antes de <code>< 18</code>. Se invertesse a ordem, "criança" nunca seria identificada pois toda criança também é <code>< 18</code>.'},
+
+// MÉDIO
+{nivel:'m',title:'switch — trocando else-if por casos claros',time:'9 min',
+instrs:[
+  'Crie <code>DiaDaSemana.java</code> que leia um número de 1 a 7 e exiba o nome do dia correspondente',
+  'Use <code>switch(numero)</code> com <code>case 1:</code> até <code>case 7:</code> e <code>default:</code> para o caso inválido',
+  'Adicione <code>break;</code> ao final de cada case — depois, remova um break e observe o fall-through',
+  'Melhore: agrupe os fins de semana (case 6 e case 7) sem break entre eles para exibir "Fim de semana!"',
+  'Teste com 1, 6, 7 e 9 — confirme que cada um funciona corretamente',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">DiaDaSemana</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+        <span class="cl">System</span>.out.print(<span class="s">"Dia (1-7): "</span>);
+        <span class="t">int</span> dia = sc.nextInt();
+
+        <span class="k">switch</span> (dia) {
+            <span class="k">case</span> <span class="v">1</span>: <span class="cl">System</span>.out.println(<span class="s">"Segunda-feira"</span>); <span class="k">break</span>;
+            <span class="k">case</span> <span class="v">2</span>: <span class="cl">System</span>.out.println(<span class="s">"Terça-feira"</span>);   <span class="k">break</span>;
+            <span class="k">case</span> <span class="v">3</span>: <span class="cl">System</span>.out.println(<span class="s">"Quarta-feira"</span>);  <span class="k">break</span>;
+            <span class="k">case</span> <span class="v">4</span>: <span class="cl">System</span>.out.println(<span class="s">"Quinta-feira"</span>);  <span class="k">break</span>;
+            <span class="k">case</span> <span class="v">5</span>: <span class="cl">System</span>.out.println(<span class="s">"Sexta-feira"</span>);   <span class="k">break</span>;
+            <span class="k">case</span> <span class="v">6</span>:
+            <span class="k">case</span> <span class="v">7</span>: <span class="cl">System</span>.out.println(<span class="s">"🎉 Fim de semana!"</span>); <span class="k">break</span>;
+            <span class="k">default</span>: <span class="cl">System</span>.out.println(<span class="s">"Dia inválido!"</span>);
+        }
+        sc.close();
+    }
+}`,
+tip:'<strong>Fall-through intencional:</strong> case 6 sem break "cai" no case 7, executando o mesmo código para ambos. É o único uso válido de fall-through — para agrupar casos com mesma saída. Java 14+ tem o <code>switch expression</code> com <code>case X -> ação;</code> que elimina o problema do break, mas por ora dominemos o switch clássico.'},
+
+{nivel:'m',title:'Condicionais aninhadas e lógica combinada',time:'10 min',
+instrs:[
+  'Crie <code>Emprestimo.java</code> com Scanner — simule aprovação de empréstimo bancário',
+  'Leia: score de crédito (int, 0-1000), renda mensal (double) e valor solicitado (double)',
+  'Critérios: score >= 700 AND renda >= 3x a parcela mensal (valorSolicitado / 24) AND valorSolicitado <= 50000',
+  'Se aprovado, calcule e exiba a parcela com juros de 1.5% ao mês (use <code>Math.pow</code> ou simplifique: parcela = valor * 1.015 * 24 / 24... use apenas: parcela = valorSolicitado * 0.0499)</code>',
+  'Se reprovado, indique QUAL critério não foi atendido (pode ser mais de um)',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">Emprestimo</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+
+        <span class="cl">System</span>.out.print(<span class="s">"Score (0-1000): "</span>);  <span class="t">int</span>    score  = sc.nextInt();
+        <span class="cl">System</span>.out.print(<span class="s">"Renda (R$): "</span>);       <span class="t">double</span> renda  = sc.nextDouble();
+        <span class="cl">System</span>.out.print(<span class="s">"Valor (R$): "</span>);       <span class="t">double</span> valor  = sc.nextDouble();
+
+        <span class="t">double</span>  parcela  = valor * <span class="v">0.0499</span>;  <span class="c">// aprox. 24x com 1.5%/mês</span>
+        <span class="t">boolean</span> okScore  = score >= <span class="v">700</span>;
+        <span class="t">boolean</span> okRenda  = renda >= parcela * <span class="v">3</span>;
+        <span class="t">boolean</span> okValor  = valor <= <span class="v">50_000</span>;
+
+        <span class="k">if</span> (okScore && okRenda && okValor) {
+            <span class="cl">System</span>.out.println(<span class="s">"✅ EMPRÉSTIMO APROVADO"</span>);
+            <span class="cl">System</span>.out.printf(<span class="s">"Parcela: R$ %.2f / mês (24x)%n"</span>, parcela);
+        } <span class="k">else</span> {
+            <span class="cl">System</span>.out.println(<span class="s">"❌ EMPRÉSTIMO NEGADO"</span>);
+            <span class="k">if</span> (!okScore)  <span class="cl">System</span>.out.printf(<span class="s">"  Score %d < 700%n"</span>, score);
+            <span class="k">if</span> (!okRenda)  <span class="cl">System</span>.out.printf(<span class="s">"  Renda R$%.0f < 3x parcela (R$%.0f)%n"</span>, renda, parcela*<span class="v">3</span>);
+            <span class="k">if</span> (!okValor)  <span class="cl">System</span>.out.printf(<span class="s">"  Valor R$%.0f > limite R$50.000%n"</span>, valor);
+        }
+        sc.close();
+    }
+}`,
+tip:'<strong>Extraia condições em variáveis boolean:</strong> <code>boolean okScore = score >= 700</code> é mais legível do que colocar tudo em um único if gigante. Isso é chamado de "código autodoocumentado" — o nome da variável explica a intenção. Facilita depuração: imprima cada boolean para ver qual critério falhou.'},
+
+// AVANÇADO
+{nivel:'a',title:'Calculadora com switch e todos os operadores',time:'10 min',
+instrs:[
+  'Crie <code>Calculadora.java</code> com Scanner — leia dois números double e um operador como char (<code>sc.next().charAt(0)</code>)',
+  'Use switch com cases <code>\'+\'</code>, <code>\'-\'</code>, <code>\'*\'</code>, <code>\'/\'</code> e <code>\'%\'</code>',
+  'Para divisão, verifique se o divisor é zero antes de calcular — exiba mensagem de erro específica',
+  'Use o default para operador não reconhecido',
+  'Formate o resultado com 4 casas decimais usando printf — exiba também a expressão completa: <code>10.0 / 3.0 = 3.3333</code>',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">Calculadora</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+
+        <span class="cl">System</span>.out.print(<span class="s">"Número 1: "</span>); <span class="t">double</span> a = sc.nextDouble();
+        <span class="cl">System</span>.out.print(<span class="s">"Operador: "</span>); <span class="t">char</span>   op = sc.next().charAt(<span class="v">0</span>);
+        <span class="cl">System</span>.out.print(<span class="s">"Número 2: "</span>); <span class="t">double</span> b = sc.nextDouble();
+
+        <span class="t">double</span> resultado = <span class="v">0</span>;
+        <span class="t">boolean</span> valido = <span class="k">true</span>;
+
+        <span class="k">switch</span> (op) {
+            <span class="k">case</span> <span class="s">'+'</span>: resultado = a + b; <span class="k">break</span>;
+            <span class="k">case</span> <span class="s">'-'</span>: resultado = a - b; <span class="k">break</span>;
+            <span class="k">case</span> <span class="s">'*'</span>: resultado = a * b; <span class="k">break</span>;
+            <span class="k">case</span> <span class="s">'/'</span>:
+                <span class="k">if</span> (b == <span class="v">0</span>) { <span class="cl">System</span>.out.println(<span class="s">"Erro: divisão por zero!"</span>); valido = <span class="k">false</span>; }
+                <span class="k">else</span> resultado = a / b;
+                <span class="k">break</span>;
+            <span class="k">case</span> <span class="s">'%'</span>:
+                <span class="k">if</span> (b == <span class="v">0</span>) { <span class="cl">System</span>.out.println(<span class="s">"Erro: módulo por zero!"</span>); valido = <span class="k">false</span>; }
+                <span class="k">else</span> resultado = a % b;
+                <span class="k">break</span>;
+            <span class="k">default</span>:
+                <span class="cl">System</span>.out.println(<span class="s">"Operador desconhecido: "</span> + op); valido = <span class="k">false</span>;
+        }
+
+        <span class="k">if</span> (valido)
+            <span class="cl">System</span>.out.printf(<span class="s">"%.4g %c %.4g = %.4f%n"</span>, a, op, b, resultado);
+        sc.close();
+    }
+}`,
+tip:'<strong>char em switch:</strong> o switch aceita char, int, String e enums — mas não boolean, double ou long. Para ler um char com Scanner, use <code>sc.next().charAt(0)</code> — lê a próxima token e pega o primeiro caractere. <code>charAt(índice)</code> é o primeiro método de String que vamos usar — veremos muito mais na Aula 04.'},
+
+{nivel:'a',title:'Imposto de renda simplificado',time:'11 min',
+instrs:[
+  'Crie <code>ImpostoRenda.java</code> com Scanner — leia a renda bruta mensal',
+  'Aplique a tabela progressiva simplificada: até R$2.259: isento; até R$2.826: 7,5%; até R$3.751: 15%; até R$4.664: 22,5%; acima: 27,5%',
+  'Use if/else if aninhados para calcular o imposto proporcional (apenas sobre o excedente de cada faixa)',
+  'Calcule também a alíquota efetiva: <code>aliqEfetiva = (imposto / rendaBruta) * 100</code>',
+  'Exiba: renda bruta, imposto bruto, renda líquida e alíquota efetiva com formatação adequada',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">ImpostoRenda</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+        <span class="cl">System</span>.out.print(<span class="s">"Renda bruta mensal (R$): "</span>);
+        <span class="t">double</span> renda = sc.nextDouble();
+
+        <span class="t">double</span> imposto;
+
+        <span class="k">if</span> (renda <= <span class="v">2259.20</span>) {
+            imposto = <span class="v">0</span>;
+        } <span class="k">else if</span> (renda <= <span class="v">2826.65</span>) {
+            imposto = (renda - <span class="v">2259.20</span>) * <span class="v">0.075</span>;
+        } <span class="k">else if</span> (renda <= <span class="v">3751.05</span>) {
+            imposto = ((<span class="v">2826.65</span>-<span class="v">2259.20</span>)*<span class="v">0.075</span>) + (renda-<span class="v">2826.65</span>)*<span class="v">0.15</span>;
+        } <span class="k">else if</span> (renda <= <span class="v">4664.68</span>) {
+            imposto = ((<span class="v">2826.65</span>-<span class="v">2259.20</span>)*<span class="v">0.075</span>)
+                    + ((<span class="v">3751.05</span>-<span class="v">2826.65</span>)*<span class="v">0.15</span>)
+                    + (renda-<span class="v">3751.05</span>)*<span class="v">0.225</span>;
+        } <span class="k">else</span> {
+            imposto = ((<span class="v">2826.65</span>-<span class="v">2259.20</span>)*<span class="v">0.075</span>)
+                    + ((<span class="v">3751.05</span>-<span class="v">2826.65</span>)*<span class="v">0.15</span>)
+                    + ((<span class="v">4664.68</span>-<span class="v">3751.05</span>)*<span class="v">0.225</span>)
+                    + (renda-<span class="v">4664.68</span>)*<span class="v">0.275</span>;
+        }
+
+        <span class="t">double</span> liquida = renda - imposto;
+        <span class="t">double</span> aliq    = renda > <span class="v">0</span> ? (imposto / renda) * <span class="v">100</span> : <span class="v">0</span>;
+
+        <span class="cl">System</span>.out.println(<span class="s">"====== IRPF Simplificado ======"</span>);
+        <span class="cl">System</span>.out.printf(<span class="s">"Renda bruta  : R$ %10.2f%n"</span>, renda);
+        <span class="cl">System</span>.out.printf(<span class="s">"Imposto      : R$ %10.2f%n"</span>, imposto);
+        <span class="cl">System</span>.out.printf(<span class="s">"Renda líquida: R$ %10.2f%n"</span>, liquida);
+        <span class="cl">System</span>.out.printf(<span class="s">"Alíquota ef. :    %9.2f%%%n"</span>, aliq);
+        sc.close();
+    }
+}`,
+tip:'<strong>Tabela progressiva:</strong> cada faixa só tributa o valor que excede a faixa anterior — não a renda inteira. Quem ganha R$3.000 paga 7,5% sobre R$567,45 (o excedente da 1ª faixa), não sobre R$3.000 inteiros. Esse cálculo em cascata com if/else aninhado é um dos mais importantes na área financeira.'},
+
+{nivel:'a',title:'Mini desafio — sistema de pedidos com condicionais',time:'11 min',
+instrs:[
+  'Crie <code>Pedido.java</code> — simule um checkout de loja online com Scanner',
+  'Leia: quantidade (int), preço unitário (double), código de cupom (String: "DESC10", "DESC20" ou vazio), e se é frete grátis (boolean)',
+  'Calcule o subtotal e aplique desconto conforme o cupom usando if/else if',
+  'Se não tiver frete grátis, adicione R$15,00 se subtotal < R$150, ou R$8,00 se < R$300, ou grátis acima disso',
+  'Exiba um recibo formatado com todos os itens, descontos, frete e total final',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">Pedido</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+
+        <span class="cl">System</span>.out.print(<span class="s">"Quantidade: "</span>);    <span class="t">int</span>    qtd    = sc.nextInt();
+        <span class="cl">System</span>.out.print(<span class="s">"Preço unit: R$ "</span>); <span class="t">double</span> preco  = sc.nextDouble();
+        sc.nextLine();
+        <span class="cl">System</span>.out.print(<span class="s">"Cupom: "</span>);          <span class="cl">String</span> cupom  = sc.nextLine().trim();
+        <span class="cl">System</span>.out.print(<span class="s">"Sou Prime (t/f): "</span>);<span class="t">boolean</span> prime = sc.nextBoolean();
+
+        <span class="t">double</span> subtotal  = qtd * preco;
+        <span class="t">double</span> desconto  = <span class="v">0</span>;
+        <span class="cl">String</span> cupomInfo = <span class="s">"Nenhum"</span>;
+
+        <span class="k">if</span>      (cupom.equals(<span class="s">"DESC10"</span>)) { desconto = subtotal * <span class="v">0.10</span>; cupomInfo = <span class="s">"DESC10 (-10%)"</span>; }
+        <span class="k">else if</span> (cupom.equals(<span class="s">"DESC20"</span>)) { desconto = subtotal * <span class="v">0.20</span>; cupomInfo = <span class="s">"DESC20 (-20%)"</span>; }
+
+        <span class="t">double</span> aposDesc  = subtotal - desconto;
+        <span class="t">double</span> frete     = <span class="v">0</span>;
+
+        <span class="k">if</span> (!prime) {
+            <span class="k">if</span>      (aposDesc < <span class="v">150</span>) frete = <span class="v">15.00</span>;
+            <span class="k">else if</span> (aposDesc < <span class="v">300</span>) frete = <span class="v">8.00</span>;
+        }
+
+        <span class="t">double</span> total = aposDesc + frete;
+
+        <span class="cl">System</span>.out.println(<span class="s">"\n======= RECIBO ======="</span>);
+        <span class="cl">System</span>.out.printf(<span class="s">"Subtotal  : R$ %8.2f%n"</span>, subtotal);
+        <span class="cl">System</span>.out.printf(<span class="s">"Cupom     : %-15s -R$ %.2f%n"</span>, cupomInfo, desconto);
+        <span class="cl">System</span>.out.printf(<span class="s">"Frete     : R$ %8.2f%s%n"</span>, frete, prime?<span class="s">" (Prime)"</span>:<span class="s">""</span>);
+        <span class="cl">System</span>.out.printf(<span class="s">"TOTAL     : R$ %8.2f%n"</span>, total);
+        sc.close();
+    }
+}`,
+tip:'<strong>Comparando Strings com .equals():</strong> NUNCA use <code>==</code> para comparar Strings em Java! <code>cupom == "DESC10"</code> compara referências de memória, não o conteúdo. Use sempre <code>cupom.equals("DESC10")</code>. Para ignorar maiúsculas/minúsculas: <code>cupom.equalsIgnoreCase("desc10")</code>. Este é um dos erros mais comuns em Java!'}
+];
+
+let done=new Set();
+function build(){
+  const list=document.getElementById('steps');
+  let prevNivel='';
+  STEPS.forEach((s,i)=>{
+    if(s.nivel!==prevNivel){
+      const sep=document.createElement('div');sep.className='nivel-sep';
+      const labels={b:'🟢 Nível Básico',m:'🟡 Nível Médio',a:'🔴 Nível Avançado'};
+      sep.innerHTML=`<div class="nivel-line"></div><span class="nivel-badge ${s.nivel}">${labels[s.nivel]}</span><div class="nivel-line"></div>`;
+      list.appendChild(sep);prevNivel=s.nivel;
+    }
+    const card=document.createElement('div');card.className='sc'+(i===0?' open-c':'');card.id='sc-'+i;
+    card.innerHTML=`<div class="sh" onclick="tog(${i})"><div class="chk" id="chk-${i}" onclick="event.stopPropagation();mk(${i})"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="si"><div class="sn2">Passo ${i+1} de ${STEPS.length}</div><div class="st">${s.title}</div><div class="stm">${s.time}</div></div><span class="cv">${i===0?'▲':'▼'}</span></div><div class="sb"><div class="sbi"><div class="il">${s.instrs.map((t,j)=>`<div class="ii"><div class="in">${j+1}</div><span>${t}</span></div>`).join('')}</div>${s.code?`<div class="cb2">${s.code}</div>`:''}<div class="tip">${s.tip}</div><button class="mb" id="mb-${i}" onclick="mk(${i})"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3.5 3.5 5.5-5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Marcar como concluído</button></div></div>`;
+    list.appendChild(card);
+  });
+}
+function tog(i){const c=document.getElementById('sc-'+i);const o=c.classList.contains('open-c');document.querySelectorAll('.sc').forEach(x=>{x.classList.remove('open-c');x.querySelector('.cv').textContent='▼';});if(!o){c.classList.add('open-c');c.querySelector('.cv').textContent='▲';}}
+function mk(i){if(done.has(i))return;done.add(i);document.getElementById('chk-'+i).classList.add('done');document.getElementById('sc-'+i).classList.add('done-c');const mb=document.getElementById('mb-'+i);mb.classList.add('done-btn');mb.innerHTML='<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3.5 3.5 5.5-5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Concluído!';upd();if(i<STEPS.length-1){document.querySelectorAll('.sc').forEach(x=>{x.classList.remove('open-c');x.querySelector('.cv').textContent='▼';});const nx=document.getElementById('sc-'+(i+1));nx.classList.add('open-c');nx.querySelector('.cv').textContent='▲';setTimeout(()=>nx.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}if(done.size===STEPS.length)document.getElementById('sbox').classList.add('show');}
+function upd(){document.getElementById('pf').style.width=Math.round((done.size/STEPS.length)*100)+'%';document.getElementById('pt').textContent=done.size+' / '+STEPS.length;}
+build();upd();
+</script>
+
+<div style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #fdba74;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:999;gap:12px">
+  <a href="java_a02_pratica_scanner.html" style="display:inline-flex;align-items:center;gap:7px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;transition:background .15s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">← Tópico 3</a>
+  <div style="font-size:11px;color:#94a3b8;font-family:'Courier New',monospace;text-align:center;flex:1">Aula 02 · Tópico 4 · Condicionais</div>
+  <a href="#" style="display:inline-flex;align-items:center;gap:7px;background:#ea580c;color:#fff;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='#c2410c'" onmouseout="this.style.background='#ea580c'">Aula 03 →</a>
+</div>
+<div style="height:52px"></div>
+</body>
+</html>

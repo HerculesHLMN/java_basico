@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula 02 | Java para Iniciantes — Tipos de Dados e Variáveis</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2333;
+    --border: #30363d;
+    --accent: #f78166;
+    --accent2: #79c0ff;
+    --accent3: #56d364;
+    --accent4: #e3b341;
+    --text: #e6edf3;
+    --text-muted: #7d8590;
+    --java-orange: #f89820;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .java-badge {
+    background: var(--java-orange);
+    color: #000;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+  }
+
+  .lesson-title {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .lesson-title span {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .progress-bar {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .prog-dot {
+    width: 28px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+
+  .prog-dot.active { background: var(--accent); }
+  .prog-dot.done { background: var(--accent3); }
+
+  /* HERO */
+  .hero {
+    padding: 60px 40px 40px;
+    max-width: 900px;
+    margin: 0 auto;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .file-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  .file-indicator .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent3);
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  h1 {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--text) 40%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  /* CONTENT */
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .section:nth-child(1) { animation-delay: 0.1s; }
+  .section:nth-child(2) { animation-delay: 0.2s; }
+  .section:nth-child(3) { animation-delay: 0.3s; }
+  .section:nth-child(4) { animation-delay: 0.4s; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  p strong { color: var(--text); font-weight: 600; }
+
+  /* DATA TYPE GRID */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+  }
+
+  .type-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+
+  .type-card:hover {
+    border-color: var(--accent2);
+    transform: translateY(-2px);
+  }
+
+  .type-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .type-name.int    { color: var(--accent2); }
+  .type-name.double { color: var(--accent4); }
+  .type-name.char   { color: var(--accent3); }
+  .type-name.bool   { color: var(--accent); }
+  .type-name.string { color: #c084fc; }
+  .type-name.long   { color: #38bdf8; }
+  .type-name.float  { color: #fb923c; }
+  .type-name.byte   { color: #a78bfa; }
+
+  .type-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .type-example {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    margin-top: 8px;
+    padding: 4px 8px;
+    background: var(--bg);
+    border-radius: 4px;
+    color: var(--text-muted);
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+
+  .code-header {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .code-lang {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--java-orange);
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .copy-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+
+  pre {
+    padding: 20px 24px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .kw  { color: #ff7b72; }
+  .tp  { color: #79c0ff; }
+  .str { color: #a5d6ff; }
+  .cm  { color: #6e7681; font-style: italic; }
+  .num { color: #f2cc60; }
+  .var { color: #e6edf3; }
+  .fn  { color: #d2a8ff; }
+
+  /* CALLOUT */
+  .callout {
+    display: flex;
+    gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent4);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    align-items: flex-start;
+  }
+
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+
+  .callout-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+
+  .callout-text strong { color: var(--accent4); }
+
+  .callout.tip { border-left-color: var(--accent3); }
+  .callout.tip .callout-text strong { color: var(--accent3); }
+
+  .callout.warn { border-left-color: var(--accent); }
+  .callout.warn .callout-text strong { color: var(--accent); }
+
+  /* COMPARISON TABLE */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin: 20px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead {
+    background: var(--surface2);
+  }
+
+  th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tr:hover td { background: var(--surface2); }
+
+  td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent2);
+    font-weight: 600;
+  }
+
+  /* NAV */
+  .nav-footer {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .nav-btn.next {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+  }
+
+  .nav-btn.next:hover {
+    background: #ff9580;
+    border-color: #ff9580;
+    color: #000;
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <span class="java-badge">JAVA</span>
+    <span class="lesson-title">Aula 02 — <span>Tipos de Dados e Variáveis</span></span>
+  </div>
+  <div class="progress-bar">
+    <div class="prog-dot active"></div>
+    <div class="prog-dot"></div>
+    <div class="prog-dot"></div>
+    <div class="prog-dot"></div>
+    <div class="prog-dot"></div>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="file-indicator">
+      <span class="dot"></span>
+      Arquivo 1 de 5 — Fundamentos
+    </div>
+    <h1>Tipos de Dados<br>e Variáveis</h1>
+    <p class="hero-desc">
+      Variáveis são os blocos fundamentais de qualquer programa. Em Java, toda variável
+      tem um tipo definido que determina quais dados ela pode armazenar.
+    </p>
+  </div>
+
+  <div class="content">
+
+    <div class="section">
+      <div class="section-label">Conceito Base</div>
+      <h2>O que é uma Variável?</h2>
+      <p>
+        Uma variável é um <strong>espaço na memória</strong> do computador com um nome e um tipo.
+        Em Java, antes de usar uma variável, você deve <strong>declará-la</strong> — informando seu tipo e nome.
+      </p>
+      <p>
+        Java é uma linguagem <strong>fortemente tipada</strong>, ou seja, você não pode misturar tipos
+        sem uma conversão explícita. Isso garante segurança e previsibilidade no código.
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JAVA</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre><span class="cm">// Sintaxe: tipo nomeDaVariavel = valor;</span>
+<span class="tp">int</span> <span class="var">idade</span> = <span class="num">25</span>;
+<span class="tp">double</span> <span class="var">altura</span> = <span class="num">1.75</span>;
+<span class="tp">String</span> <span class="var">nome</span> = <span class="str">"Maria"</span>;
+<span class="tp">boolean</span> <span class="var">ativo</span> = <span class="kw">true</span>;</pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Tipos Primitivos</div>
+      <h2>Os 8 Tipos Primitivos do Java</h2>
+      <p>Java possui 8 tipos primitivos — são os tipos mais básicos, sem métodos ou propriedades extras.</p>
+
+      <div class="type-grid">
+        <div class="type-card">
+          <div class="type-name int">int</div>
+          <div class="type-desc">Número inteiro (32 bits)</div>
+          <div class="type-example">int x = 42;</div>
+        </div>
+        <div class="type-card">
+          <div class="type-name double">double</div>
+          <div class="type-desc">Número decimal (64 bits)</div>
+          <div class="type-example">double pi = 3.14;</div>
+        </div>
+        <div class="type-card">
+          <div class="type-name float">float</div>
+          <div class="type-desc">Decimal menor (32 bits)</div>
+          <div class="type-example">float f = 3.14f;</div>
+        </div>
+        <div class="type-card">
+          <div class="type-name long">long</div>
+          <div class="type-desc">Inteiro grande (64 bits)</div>
+          <div class="type-example">long n = 999L;</div>
+        </div>
+        <div class="type-card">
+          <div class="type-name char">char</div>
+          <div class="type-desc">Um único caractere</div>
+          <div class="type-example">char c = 'A';</div>
+        </div>
+        <div class="type-card">
+          <div class="type-name bool">boolean</div>
+          <div class="type-desc">Verdadeiro ou falso</div>
+          <div class="type-example">boolean ok = true;</div>
+        </div>
+        <div class="type-card">
+          <div class="type-name byte">byte</div>
+          <div class="type-desc">Inteiro mínimo (8 bits)</div>
+          <div class="type-example">byte b = 100;</div>
+        </div>
+        <div class="type-card">
+          <div class="type-name byte">short</div>
+          <div class="type-desc">Inteiro curto (16 bits)</div>
+          <div class="type-example">short s = 32000;</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Tipo Especial</div>
+      <h2>String — O Tipo de Texto</h2>
+      <p>
+        <strong>String</strong> não é um tipo primitivo — é uma <strong>classe</strong>. Por isso começa com letra maiúscula.
+        Ela representa uma sequência de caracteres e é uma das mais usadas em Java.
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JAVA</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre><span class="tp">String</span> <span class="var">curso</span> = <span class="str">"Java para Iniciantes"</span>;
+<span class="tp">String</span> <span class="var">vazio</span> = <span class="str">""</span>;           <span class="cm">// string vazia</span>
+<span class="tp">String</span> <span class="var">nulo</span>  = <span class="kw">null</span>;        <span class="cm">// referência nula</span>
+
+<span class="cm">// Concatenação com +</span>
+<span class="tp">String</span> <span class="var">saudacao</span> = <span class="str">"Olá, "</span> + <span class="var">nome</span> + <span class="str">"!"</span>;</pre>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-text">
+          <strong>Dica:</strong> Use aspas duplas <code>" "</code> para String e aspas simples <code>' '</code> para char.
+          Confundir os dois é um erro muito comum de iniciantes.
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Comparativo</div>
+      <h2>Tabela de Tipos e Valores</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Tamanho</th>
+              <th>Valor Mínimo</th>
+              <th>Valor Máximo</th>
+              <th>Uso típico</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>byte</td><td>8 bits</td><td>-128</td><td>127</td><td>Dados compactos</td></tr>
+            <tr><td>short</td><td>16 bits</td><td>-32.768</td><td>32.767</td><td>Uso raro</td></tr>
+            <tr><td>int</td><td>32 bits</td><td>-2 bilhões</td><td>2 bilhões</td><td>Contadores, índices</td></tr>
+            <tr><td>long</td><td>64 bits</td><td>-9,2 × 10¹⁸</td><td>9,2 × 10¹⁸</td><td>IDs, timestamps</td></tr>
+            <tr><td>float</td><td>32 bits</td><td colspan="2">~7 dígitos decimais</td><td>Gráficos 3D</td></tr>
+            <tr><td>double</td><td>64 bits</td><td colspan="2">~15 dígitos decimais</td><td>Cálculos financeiros</td></tr>
+            <tr><td>char</td><td>16 bits</td><td>'\u0000'</td><td>'\uffff'</td><td>Caractere único</td></tr>
+            <tr><td>boolean</td><td>1 bit</td><td>false</td><td>true</td><td>Condições lógicas</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-text">
+          <strong>Atenção:</strong> Em Java, <code>float</code> exige o sufixo <code>f</code> no valor (ex: <code>3.14f</code>)
+          e <code>long</code> exige <code>L</code> (ex: <code>9999999999L</code>). Sem eles, o compilador retorna erro.
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Código Completo</div>
+      <h2>Exemplo Prático</h2>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JAVA — Variaveis.java</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre><span class="kw">public class</span> <span class="fn">Variaveis</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {
+
+        <span class="cm">// Tipos primitivos</span>
+        <span class="tp">int</span>     <span class="var">idade</span>      = <span class="num">20</span>;
+        <span class="tp">double</span>  <span class="var">nota</span>       = <span class="num">9.5</span>;
+        <span class="tp">char</span>    <span class="var">inicial</span>    = <span class="str">'J'</span>;
+        <span class="tp">boolean</span> <span class="var">aprovado</span>   = <span class="kw">true</span>;
+
+        <span class="cm">// Tipo String</span>
+        <span class="tp">String</span>  <span class="var">nome</span>       = <span class="str">"João"</span>;
+
+        <span class="cm">// Exibindo no console</span>
+        System.out.<span class="fn">println</span>(<span class="str">"Nome: "</span> + <span class="var">nome</span>);
+        System.out.<span class="fn">println</span>(<span class="str">"Idade: "</span> + <span class="var">idade</span>);
+        System.out.<span class="fn">println</span>(<span class="str">"Nota: "</span> + <span class="var">nota</span>);
+        System.out.<span class="fn">println</span>(<span class="str">"Aprovado: "</span> + <span class="var">aprovado</span>);
+    }
+}</pre>
+      </div>
+
+      <div class="callout">
+        <span class="callout-icon">📤</span>
+        <div class="callout-text">
+          <strong>Saída:</strong><br>
+          Nome: João<br>
+          Idade: 20<br>
+          Nota: 9.5<br>
+          Aprovado: true
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<nav class="nav-footer">
+  <a href="#" class="nav-btn">← Aula 01</a>
+  <a href="aula02_java_02_operadores.html" class="nav-btn next">Próximo: Operadores →</a>
+</nav>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText);
+    btn.textContent = 'Copiado!';
+    setTimeout(() => btn.textContent = 'Copiar', 2000);
+  }
+</script>
+</body>
+</html>

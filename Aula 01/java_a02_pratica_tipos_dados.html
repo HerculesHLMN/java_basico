@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prática Guiada — Tipos de Dados e Variáveis · Aula 02</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;color:#1e293b;background:#f0fdf4;min-height:100vh;padding:22px}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:11px}
+.pg-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.pg-title{font-size:17px;font-weight:600}.pg-meta{font-size:12px;color:#64748b;margin-top:2px}
+.pg-time{font-size:12px;font-weight:600;background:#bbf7d0;border:1px solid #86efac;padding:4px 12px;border-radius:8px;color:#15803d}
+.prog-row{display:flex;align-items:center;gap:9px}
+.pb{flex:1;height:7px;background:#bbf7d0;border-radius:4px;overflow:hidden}
+.pf{height:100%;background:#16a34a;border-radius:4px;transition:width .4s ease;width:0%}
+.pt{font-size:12px;font-weight:600;color:#64748b;min-width:60px;text-align:right}
+.nivel-sep{display:flex;align-items:center;gap:10px;margin:4px 0}
+.nivel-line{flex:1;height:1px;background:#86efac}
+.nivel-badge{font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap}
+.nivel-badge.b{background:#dcfce7;color:#15803d;border:1px solid #86efac}
+.nivel-badge.m{background:#fef9c3;color:#92400e;border:1px solid #fde047}
+.nivel-badge.a{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.sc{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff;transition:border-color .2s}
+.sc.done-c{border-color:#86efac}.sc.open-c{border-color:#4ade80}
+.sh{display:flex;align-items:flex-start;gap:11px;padding:12px 13px;cursor:pointer;user-select:none;transition:background .15s}
+.sh:hover{background:#f8fafc}.sc.open-c .sh{background:#f0fdf4}
+.chk{width:21px;height:21px;border-radius:6px;border:1.5px solid #cbd5e1;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .18s;cursor:pointer;background:#fff}
+.chk:hover{border-color:#16a34a;background:#f0fdf4}.chk.done{background:#22c55e;border-color:#22c55e}
+.chk svg{display:none}.chk.done svg{display:block}
+.si{flex:1}.sn2{font-size:11px;font-weight:600;color:#94a3b8;margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.st{font-size:13px;font-weight:600;color:#1e293b;line-height:1.3}.stm{font-size:11px;color:#94a3b8;margin-top:2px}
+.cv{color:#94a3b8;font-size:11px;margin-top:4px;transition:transform .22s;flex-shrink:0}
+.sc.open-c .cv{transform:rotate(180deg)}
+.sb{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.sc.open-c .sb{max-height:1800px}
+.sbi{padding:0 13px 14px;border-top:1px solid #f1f5f9}
+.il{display:flex;flex-direction:column;gap:6px;margin:11px 0}
+.ii{display:flex;gap:9px;font-size:13px;color:#475569;line-height:1.55;align-items:flex-start}
+.in{width:19px;height:19px;min-width:19px;border-radius:5px;background:#f0fdf4;color:#16a34a;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:1px}
+code{font-family:'Courier New',monospace;font-size:12px;background:#f1f5f9;padding:1px 5px;border-radius:3px;border:1px solid #e2e8f0}
+.cb2{background:#1e293b;border-radius:8px;padding:12px 15px;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;color:#94a3b8;margin:9px 0;overflow-x:auto;white-space:pre}
+.k{color:#93c5fd}.t{color:#34d399}.v{color:#6ee7b7}.s{color:#fda4af}.c{color:#475569;font-style:italic}.fn{color:#fbbf24}.cl{color:#c4b5fd}.an{color:#fb923c}
+.tip{background:#f0fdf4;border-left:3px solid #16a34a;padding:8px 12px;font-size:12px;color:#14532d;line-height:1.5;margin-top:8px}
+.tip strong{color:#15803d;font-weight:600}
+.mb{display:inline-flex;align-items:center;gap:5px;background:#f8fafc;border:1px solid #cbd5e1;color:#64748b;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .18s;margin-top:10px}
+.mb:hover{background:#f0fdf4;color:#15803d;border-color:#86efac}
+.mb.done-btn{background:#f0fdf4;color:#15803d;border-color:#86efac;pointer-events:none}
+.sbox{background:#f0fdf4;border:1px solid #86efac;border-radius:14px;padding:20px;text-align:center;display:none}
+.sbox.show{display:block}
+.sbox h3{font-size:16px;font-weight:600;color:#16a34a;margin-bottom:6px}
+.sbox p{font-size:13px;color:#14532d;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="pg-header">
+    <div><div class="pg-title">Prática guiada — Tipos de Dados e Variáveis 📦</div><div class="pg-meta">Siga os passos no IDE. Marque cada um quando terminar. Básico → Médio → Avançado.</div></div>
+    <span class="pg-time">65 min disponíveis</span>
+  </div>
+  <div class="prog-row"><div class="pb"><div class="pf" id="pf"></div></div><div class="pt" id="pt">0 / 7</div></div>
+  <div id="steps"></div>
+  <div class="sbox" id="sbox">
+    <h3>📦 Tópico 1 concluído!</h3>
+    <p>Tipos primitivos, String, casting e constantes — dominados.<br>Próximo: <strong>Tópico 2 — Operadores Aritméticos, Relacionais e Lógicos!</strong></p>
+  </div>
+</div>
+<script>
+const STEPS=[
+// BÁSICO
+{nivel:'b',title:'Declarando os 8 tipos primitivos',time:'8 min',
+instrs:[
+  'Crie um arquivo <code>TiposPrimitivos.java</code> com a estrutura <code>public class TiposPrimitivos { public static void main(String[] args){ } }</code>',
+  'Declare uma variável de cada tipo primitivo: <code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code>, <code>char</code>, <code>boolean</code>',
+  'Lembre dos sufixos obrigatórios: <code>long</code> usa <code>L</code> no final (ex: <code>999L</code>), e <code>float</code> usa <code>f</code> (ex: <code>3.14f</code>)',
+  'Use <code>System.out.println()</code> para imprimir o tipo e o valor de cada variável',
+  'Execute e confirme que todos os 8 valores aparecem no console sem erros',
+],
+code:`<span class="k">public class</span> <span class="cl">TiposPrimitivos</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+
+        <span class="t">byte</span>    b  = <span class="v">100</span>;
+        <span class="t">short</span>   s  = <span class="v">32000</span>;
+        <span class="t">int</span>     i  = <span class="v">2_000_000</span>;
+        <span class="t">long</span>    l  = <span class="v">9_000_000_000L</span>;
+        <span class="t">float</span>   f  = <span class="v">3.14f</span>;
+        <span class="t">double</span>  d  = <span class="v">3.141592653589</span>;
+        <span class="t">char</span>    c  = <span class="s">'J'</span>;
+        <span class="t">boolean</span> ok = <span class="k">true</span>;
+
+        <span class="cl">System</span>.out.println(<span class="s">"byte: "</span>    + b);
+        <span class="cl">System</span>.out.println(<span class="s">"short: "</span>   + s);
+        <span class="cl">System</span>.out.println(<span class="s">"int: "</span>     + i);
+        <span class="cl">System</span>.out.println(<span class="s">"long: "</span>    + l);
+        <span class="cl">System</span>.out.println(<span class="s">"float: "</span>   + f);
+        <span class="cl">System</span>.out.println(<span class="s">"double: "</span>  + d);
+        <span class="cl">System</span>.out.println(<span class="s">"char: "</span>    + c);
+        <span class="cl">System</span>.out.println(<span class="s">"boolean: "</span> + ok);
+    }
+}`,
+tip:'<strong>Separador de milhar com _:</strong> Java permite usar underscore em literais numéricos: <code>2_000_000</code> é mais legível que <code>2000000</code>. Funciona em int, long, double etc. O compilador ignora os underscores.'},
+
+{nivel:'b',title:'String — tipo de texto em Java',time:'7 min',
+instrs:[
+  'Crie <code>UsandoString.java</code> e declare <code>String nome = "SeuNome";</code> com o seu próprio nome',
+  'Declare <code>String cidade = "SuaCidade";</code> e <code>int anoNasc = 2003;</code> (use seu ano)',
+  'Use concatenação com <code>+</code> para montar e imprimir uma frase completa: <code>"Olá, eu sou " + nome + "..."</code>',
+  'Experimente atribuir <code>String vazia = "";</code> e <code>String nula = null;</code> — imprima-as e veja a diferença',
+  'Tente somar um int com uma String: <code>"Ano: " + anoNasc</code> — observe o resultado',
+],
+code:`<span class="k">public class</span> <span class="cl">UsandoString</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+
+        <span class="cl">String</span> nome    = <span class="s">"Ana"</span>;
+        <span class="cl">String</span> cidade  = <span class="s">"Blumenau"</span>;
+        <span class="t">int</span>    anoNasc = <span class="v">2003</span>;
+
+        <span class="cl">System</span>.out.println(<span class="s">"Olá, eu sou "</span> + nome + <span class="s">" de "</span> + cidade + <span class="s">"!"</span>);
+        <span class="cl">System</span>.out.println(<span class="s">"Ano de nascimento: "</span> + anoNasc);
+
+        <span class="cl">String</span> vazia = <span class="s">""</span>;
+        <span class="cl">String</span> nula  = <span class="k">null</span>;
+        <span class="cl">System</span>.out.println(<span class="s">"Vazia: ["</span> + vazia + <span class="s">"]"</span>);
+        <span class="cl">System</span>.out.println(<span class="s">"Nula: "</span>  + nula);
+    }
+}`,
+tip:'<strong>String vs char:</strong> <code>char</code> armazena UM único caractere entre aspas simples: <code>\'A\'</code>. <code>String</code> armazena QUALQUER texto entre aspas duplas: <code>"Ana"</code>. Confundir os delimitadores é erro de compilação. String começa com maiúscula porque é uma classe, não um tipo primitivo.'},
+
+// MÉDIO
+{nivel:'m',title:'Limites de tipos e overflow',time:'9 min',
+instrs:[
+  'Crie <code>LimitesTipos.java</code> e use as constantes prontas do Java para ver os limites: <code>Integer.MAX_VALUE</code>, <code>Integer.MIN_VALUE</code>',
+  'Declare <code>int maximo = Integer.MAX_VALUE;</code> e depois some 1: <code>int overflow = maximo + 1;</code>',
+  'Imprima <code>maximo</code> e <code>overflow</code> — observe que o valor "dá a volta" para o mínimo (overflow)',
+  'Repita com <code>Byte.MAX_VALUE + 1</code> — note que o byte vai de 127 para -128',
+  'Declare <code>long grande = 10_000_000_000L;</code> e tente sem o L — veja o erro de compilação',
+],
+code:`<span class="k">public class</span> <span class="cl">LimitesTipos</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+
+        <span class="cl">System</span>.out.println(<span class="s">"int max: "</span>  + <span class="cl">Integer</span>.MAX_VALUE);
+        <span class="cl">System</span>.out.println(<span class="s">"int min: "</span>  + <span class="cl">Integer</span>.MIN_VALUE);
+
+        <span class="t">int</span> maximo   = <span class="cl">Integer</span>.MAX_VALUE;
+        <span class="t">int</span> overflow = maximo + <span class="v">1</span>;
+        <span class="cl">System</span>.out.println(<span class="s">"overflow: "</span> + overflow);  <span class="c">// -2147483648!</span>
+
+        <span class="t">byte</span> bMax   = <span class="cl">Byte</span>.MAX_VALUE;     <span class="c">// 127</span>
+        <span class="t">int</span>  bOver  = bMax + <span class="v">1</span>;           <span class="c">// 128 (int não estoura)</span>
+        <span class="cl">System</span>.out.println(<span class="s">"byte+1: "</span>   + bOver);
+
+        <span class="t">long</span> grande = <span class="v">10_000_000_000L</span>;  <span class="c">// sem o L → erro!</span>
+        <span class="cl">System</span>.out.println(<span class="s">"long: "</span>     + grande);
+    }
+}`,
+tip:'<strong>Overflow silencioso:</strong> Java não lança exceção quando um int estoura — o valor simplesmente "dá a volta". Isso é uma fonte clássica de bugs. Para valores muito grandes, use <code>long</code>. Para matemática de precisão monetária, use <code>BigDecimal</code> (veremos em aulas futuras).'},
+
+{nivel:'m',title:'Casting — conversão entre tipos',time:'9 min',
+instrs:[
+  'Crie <code>Casting.java</code> e declare <code>double d = 9.99;</code> — tente atribuir direto a um <code>int</code> e veja o erro',
+  'Corrija com cast explícito: <code>int i = (int) d;</code> — observe que 9.99 vira 9 (trunca, não arredonda)',
+  'Teste a promoção automática: <code>int a = 5; double r = a;</code> — isso funciona sem cast (widening)',
+  'Faça a divisão <code>int x=7, y=2; double resultado = x/y;</code> — imprima e veja o problema (dá 3.0!)',
+  'Corrija com cast: <code>double resultado = (double) x / y;</code> — agora deve dar 3.5',
+],
+code:`<span class="k">public class</span> <span class="cl">Casting</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+
+        <span class="c">// Narrowing: double → int (perde a parte decimal)</span>
+        <span class="t">double</span> d = <span class="v">9.99</span>;
+        <span class="t">int</span>    i = (<span class="t">int</span>) d;
+        <span class="cl">System</span>.out.println(d + <span class="s">" → int = "</span> + i);  <span class="c">// 9 (não 10!)</span>
+
+        <span class="c">// Widening: int → double (automático, sem cast)</span>
+        <span class="t">int</span>    a = <span class="v">5</span>;
+        <span class="t">double</span> r = a;
+        <span class="cl">System</span>.out.println(<span class="s">"int→double: "</span> + r);    <span class="c">// 5.0</span>
+
+        <span class="c">// Divisão inteira vs. real</span>
+        <span class="t">int</span> x = <span class="v">7</span>, y = <span class="v">2</span>;
+        <span class="cl">System</span>.out.println(<span class="s">"int/int: "</span>      + (x / y));           <span class="c">// 3</span>
+        <span class="cl">System</span>.out.println(<span class="s">"cast/int: "</span>     + ((<span class="t">double</span>) x / y));  <span class="c">// 3.5</span>
+    }
+}`,
+tip:'<strong>Cast trunca, não arredonda:</strong> <code>(int) 9.99</code> resulta em <code>9</code>, não <code>10</code>. Para arredondar use <code>Math.round()</code>. O cast narrowing pode causar perda de dados silenciosa — use com cuidado. Widening (int→long→double) é sempre seguro e automático.'},
+
+// AVANÇADO
+{nivel:'a',title:'Constantes com final e boas práticas de nomes',time:'8 min',
+instrs:[
+  'Crie <code>Constantes.java</code> e declare constantes com <code>final</code>: <code>final double PI = 3.14159;</code> e <code>final int MESES_ANO = 12;</code>',
+  'Tente reatribuir uma constante: <code>PI = 3.0;</code> — observe o erro de compilação',
+  'Use as constantes em cálculos: área do círculo <code>area = PI * raio * raio</code> com raio lido do teclado',
+  'Renomeie variáveis seguindo a convenção Java: <code>camelCase</code> para variáveis/métodos, <code>SNAKE_UPPER_CASE</code> para constantes',
+  'Imprima os resultados com <code>printf</code> usando <code>%.4f</code> para 4 casas decimais',
+],
+code:`<span class="k">public class</span> <span class="cl">Constantes</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+
+        <span class="k">final</span> <span class="t">double</span> PI           = <span class="v">3.14159265358979</span>;
+        <span class="k">final</span> <span class="t">int</span>    MESES_ANO    = <span class="v">12</span>;
+        <span class="k">final</span> <span class="t">double</span> TAXA_JUROS   = <span class="v">0.015</span>;  <span class="c">// 1.5% ao mês</span>
+
+        <span class="c">// PI = 3.0;  // ← erro: cannot assign a value to final variable</span>
+
+        <span class="t">double</span> raio    = <span class="v">5.0</span>;
+        <span class="t">double</span> area    = PI * raio * raio;
+        <span class="t">double</span> circunf = <span class="v">2</span> * PI * raio;
+
+        <span class="cl">System</span>.out.printf(<span class="s">"Raio       : %.2f%n"</span>, raio);
+        <span class="cl">System</span>.out.printf(<span class="s">"Área       : %.4f%n"</span>, area);
+        <span class="cl">System</span>.out.printf(<span class="s">"Circunf.   : %.4f%n"</span>, circunf);
+        <span class="cl">System</span>.out.printf(<span class="s">"Meses/ano  : %d%n"</span>,   MESES_ANO);
+        <span class="cl">System</span>.out.printf(<span class="s">"Taxa mensal: %.1f%%%n"</span>,TAXA_JUROS * <span class="v">100</span>);
+    }
+}`,
+tip:'<strong>Convenção de nomes Java:</strong> variáveis e métodos usam <code>camelCase</code> (ex: <code>taxaJuros</code>). Constantes <code>final</code> usam <code>UPPER_SNAKE_CASE</code> (ex: <code>TAXA_JUROS</code>). Classes usam <code>PascalCase</code> (ex: <code>ContaBancaria</code>). Seguir a convenção torna seu código legível por qualquer desenvolvedor Java.'},
+
+{nivel:'a',title:'Ficha de cadastro completa',time:'10 min',
+instrs:[
+  'Crie <code>Cadastro.java</code> com Scanner e leia: nome (String), idade (int), altura (double), peso (double) e inicial do nome (char)',
+  'Calcule IMC: <code>imc = peso / (altura * altura)</code> e classifique usando if/else: abaixo de 18.5 (Abaixo do peso), até 24.9 (Normal), até 29.9 (Sobrepeso), acima (Obesidade)',
+  'Calcule o ano de nascimento: <code>anoNasc = 2025 - idade</code>',
+  'Exiba um relatório formatado usando <code>printf</code> com alinhamento: rótulo em 20 chars e valor à direita',
+  'Declare a cotação do dólar como constante <code>final double COTACAO = 5.10</code> e exiba também o IMC em "libras/polegada²" (fator: <code>imc * 0.0703</code>)',
+],
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">Cadastro</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+
+        <span class="cl">System</span>.out.print(<span class="s">"Nome: "</span>);        <span class="cl">String</span> nome   = sc.nextLine();
+        <span class="cl">System</span>.out.print(<span class="s">"Idade: "</span>);       <span class="t">int</span>    idade  = sc.nextInt();
+        <span class="cl">System</span>.out.print(<span class="s">"Altura (m): "</span>);  <span class="t">double</span> altura = sc.nextDouble();
+        <span class="cl">System</span>.out.print(<span class="s">"Peso (kg): "</span>);   <span class="t">double</span> peso   = sc.nextDouble();
+
+        <span class="t">double</span> imc     = peso / (altura * altura);
+        <span class="t">int</span>    anoNasc = <span class="v">2025</span> - idade;
+
+        <span class="cl">String</span> classif;
+        <span class="k">if</span>      (imc < <span class="v">18.5</span>) classif = <span class="s">"Abaixo do peso"</span>;
+        <span class="k">else if</span> (imc < <span class="v">25.0</span>) classif = <span class="s">"Normal"</span>;
+        <span class="k">else if</span> (imc < <span class="v">30.0</span>) classif = <span class="s">"Sobrepeso"</span>;
+        <span class="k">else</span>                  classif = <span class="s">"Obesidade"</span>;
+
+        <span class="cl">System</span>.out.println(<span class="s">"======= FICHA ======="</span>);
+        <span class="cl">System</span>.out.printf(<span class="s">"%-20s %s%n"</span>,    <span class="s">"Nome:"</span>,       nome);
+        <span class="cl">System</span>.out.printf(<span class="s">"%-20s %d anos%n"</span>, <span class="s">"Idade:"</span>,      idade);
+        <span class="cl">System</span>.out.printf(<span class="s">"%-20s %d%n"</span>,    <span class="s">"Nasc. aprox:"</span>,anoNasc);
+        <span class="cl">System</span>.out.printf(<span class="s">"%-20s %.2f%n"</span>,  <span class="s">"IMC:"</span>,        imc);
+        <span class="cl">System</span>.out.printf(<span class="s">"%-20s %s%n"</span>,    <span class="s">"Classificação:"</span>,classif);
+    }
+}`,
+tip:'<strong>%-20s</strong> alinha texto à esquerda em 20 caracteres — ótimo para criar relatórios com colunas alinhadas. O sinal <code>-</code> indica alinhamento à esquerda; sem ele, o padrão é direita. Combine com <code>%10.2f</code> para a coluna de valores.'},
+
+{nivel:'a',title:'Mini desafio — tabela de tipos com limites',time:'9 min',
+instrs:[
+  'Crie <code>TabelaTipos.java</code> e imprima uma tabela formatada com os 8 tipos primitivos',
+  'Para cada tipo, exiba: nome do tipo, tamanho em bits, valor mínimo e valor máximo usando as constantes Java (ex: <code>Byte.MIN_VALUE</code>, <code>Short.MAX_VALUE</code> etc.)',
+  'Use <code>printf</code> com <code>%-10s</code> para o nome, <code>%5d bits</code> para o tamanho, e <code>%20d</code> para os limites',
+  'Adicione uma linha separadora com <code>"-".repeat(60)</code> (método de String que veremos na próxima aula)',
+  'No final, imprima uma observação sobre qual tipo usar em cada situação do dia a dia',
+],
+code:`<span class="k">public class</span> <span class="cl">TabelaTipos</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+
+        <span class="cl">String</span> sep = <span class="s">"-"</span>.repeat(<span class="v">60</span>);
+        <span class="cl">System</span>.out.printf(<span class="s">"%-9s %5s %20s %20s%n"</span>,
+            <span class="s">"Tipo"</span>, <span class="s">"Bits"</span>, <span class="s">"Mínimo"</span>, <span class="s">"Máximo"</span>);
+        <span class="cl">System</span>.out.println(sep);
+
+        <span class="cl">System</span>.out.printf(<span class="s">"%-9s %5d %20d %20d%n"</span>,
+            <span class="s">"byte"</span>,    <span class="v">8</span>,  <span class="cl">Byte</span>.MIN_VALUE,    <span class="cl">Byte</span>.MAX_VALUE);
+        <span class="cl">System</span>.out.printf(<span class="s">"%-9s %5d %20d %20d%n"</span>,
+            <span class="s">"short"</span>,  <span class="v">16</span>, <span class="cl">Short</span>.MIN_VALUE,   <span class="cl">Short</span>.MAX_VALUE);
+        <span class="cl">System</span>.out.printf(<span class="s">"%-9s %5d %20d %20d%n"</span>,
+            <span class="s">"int"</span>,    <span class="v">32</span>, <span class="cl">Integer</span>.MIN_VALUE, <span class="cl">Integer</span>.MAX_VALUE);
+        <span class="cl">System</span>.out.printf(<span class="s">"%-9s %5d %20d %20d%n"</span>,
+            <span class="s">"long"</span>,   <span class="v">64</span>, <span class="cl">Long</span>.MIN_VALUE,    <span class="cl">Long</span>.MAX_VALUE);
+        <span class="cl">System</span>.out.println(sep);
+        <span class="cl">System</span>.out.printf(<span class="s">"%-9s %5d %20.6e %20.6e%n"</span>,
+            <span class="s">"float"</span>,  <span class="v">32</span>, (<span class="t">double</span>)<span class="cl">Float</span>.MIN_VALUE,  (<span class="t">double</span>)<span class="cl">Float</span>.MAX_VALUE);
+        <span class="cl">System</span>.out.printf(<span class="s">"%-9s %5d %20.6e %20.6e%n"</span>,
+            <span class="s">"double"</span>, <span class="v">64</span>, <span class="cl">Double</span>.MIN_VALUE,  <span class="cl">Double</span>.MAX_VALUE);
+    }
+}`,
+tip:'<strong>%e</strong> exibe números em notação científica: <code>1.4e-45</code>. Útil para valores muito grandes ou muito pequenos como os limites de float/double. O Java possui constantes prontas para todos os tipos numéricos na classe <em>wrapper</em> correspondente: <code>Integer</code>, <code>Long</code>, <code>Double</code> etc.'}
+];
+
+let done=new Set();
+function build(){
+  const list=document.getElementById('steps');
+  let prevNivel='';
+  STEPS.forEach((s,i)=>{
+    if(s.nivel!==prevNivel){
+      const sep=document.createElement('div');sep.className='nivel-sep';
+      const labels={b:'🟢 Nível Básico',m:'🟡 Nível Médio',a:'🔴 Nível Avançado'};
+      sep.innerHTML=`<div class="nivel-line"></div><span class="nivel-badge ${s.nivel}">${labels[s.nivel]}</span><div class="nivel-line"></div>`;
+      list.appendChild(sep);prevNivel=s.nivel;
+    }
+    const card=document.createElement('div');card.className='sc'+(i===0?' open-c':'');card.id='sc-'+i;
+    card.innerHTML=`<div class="sh" onclick="tog(${i})"><div class="chk" id="chk-${i}" onclick="event.stopPropagation();mk(${i})"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="si"><div class="sn2">Passo ${i+1} de ${STEPS.length}</div><div class="st">${s.title}</div><div class="stm">${s.time}</div></div><span class="cv">${i===0?'▲':'▼'}</span></div><div class="sb"><div class="sbi"><div class="il">${s.instrs.map((t,j)=>`<div class="ii"><div class="in">${j+1}</div><span>${t}</span></div>`).join('')}</div>${s.code?`<div class="cb2">${s.code}</div>`:''}<div class="tip">${s.tip}</div><button class="mb" id="mb-${i}" onclick="mk(${i})"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3.5 3.5 5.5-5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Marcar como concluído</button></div></div>`;
+    list.appendChild(card);
+  });
+}
+function tog(i){const c=document.getElementById('sc-'+i);const o=c.classList.contains('open-c');document.querySelectorAll('.sc').forEach(x=>{x.classList.remove('open-c');x.querySelector('.cv').textContent='▼';});if(!o){c.classList.add('open-c');c.querySelector('.cv').textContent='▲';}}
+function mk(i){if(done.has(i))return;done.add(i);document.getElementById('chk-'+i).classList.add('done');document.getElementById('sc-'+i).classList.add('done-c');const mb=document.getElementById('mb-'+i);mb.classList.add('done-btn');mb.innerHTML='<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3.5 3.5 5.5-5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Concluído!';upd();if(i<STEPS.length-1){document.querySelectorAll('.sc').forEach(x=>{x.classList.remove('open-c');x.querySelector('.cv').textContent='▼';});const nx=document.getElementById('sc-'+(i+1));nx.classList.add('open-c');nx.querySelector('.cv').textContent='▲';setTimeout(()=>nx.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}if(done.size===STEPS.length)document.getElementById('sbox').classList.add('show');}
+function upd(){document.getElementById('pf').style.width=Math.round((done.size/STEPS.length)*100)+'%';document.getElementById('pt').textContent=done.size+' / '+STEPS.length;}
+build();upd();
+</script>
+
+<div style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #86efac;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:999;gap:12px">
+  <a href="aula02_java_01_tipos_dados.html" style="display:inline-flex;align-items:center;gap:7px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;transition:background .15s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">← Teoria</a>
+  <div style="font-size:11px;color:#94a3b8;font-family:'Courier New',monospace;text-align:center;flex:1">Aula 02 · Tópico 1 · Tipos de Dados e Variáveis</div>
+  <a href="java_a02_pratica_operadores.html" style="display:inline-flex;align-items:center;gap:7px;background:#16a34a;color:#fff;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">Próximo Tópico →</a>
+</div>
+<div style="height:52px"></div>
+</body>
+</html>

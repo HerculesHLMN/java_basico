@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafio — Scanner e Entrada de Dados · Aula 02</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;color:#1e293b;background:#fdf4ff;min-height:100vh;padding:22px}
+.wrap{max-width:940px;margin:0 auto;display:flex;flex-direction:column;gap:11px}
+.brief{border:1px solid #d8b4fe;border-radius:12px;overflow:hidden;background:#fff}
+.bt{background:#fdf4ff;padding:17px 19px;border-bottom:1px solid #d8b4fe}
+.badge{font-size:11px;font-weight:600;background:#9333ea;color:#fff;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:7px}
+.btitle{font-size:19px;font-weight:600;color:#581c87;margin-bottom:3px}
+.bsub{font-size:13px;color:#7e22ce}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.two{grid-template-columns:1fr}}
+.colt{font-size:11px;font-weight:600;color:#64748b;margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em}
+.req-wrap{display:flex;flex-direction:column;gap:5px}
+.ri2{display:flex;gap:9px;align-items:flex-start}
+.rc{width:19px;height:19px;min-width:19px;border-radius:5px;border:1.5px solid #cbd5e1;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:2px;background:#fff;transition:all .15s;flex-shrink:0}
+.rc:hover{border-color:#9333ea;background:#fdf4ff}.rc.on{background:#22c55e;border-color:#22c55e}
+.rc svg{display:none}.rc.on svg{display:block}
+.rt2{font-size:12.5px;color:#475569;line-height:1.5}.rt2.done{color:#94a3b8;text-decoration:line-through}
+code{font-family:'Courier New',monospace;font-size:11.5px;background:#f1f5f9;padding:1px 5px;border-radius:3px;border:1px solid #e2e8f0}
+.crit-list{display:flex;flex-direction:column;gap:5px}
+.ci{display:flex;align-items:flex-start;gap:7px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:7px 10px;font-size:12px;color:#475569}
+.cd{width:5px;height:5px;min-width:5px;border-radius:50%;background:#9333ea;flex-shrink:0;margin-top:5px}
+.cd.g{background:#22c55e}
+.pw{border:1px solid #e2e8f0;border-radius:12px;padding:13px 15px;background:#fff}
+.pl{font-size:12px;color:#64748b;margin-bottom:7px;display:flex;justify-content:space-between}
+.pl strong{color:#1e293b;font-weight:600}
+.pbg{height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin-bottom:9px}
+.pfill{height:100%;background:#9333ea;border-radius:4px;transition:width .4s ease;width:0%}
+.pm{font-size:12px;color:#64748b;font-style:italic}
+.tr{display:flex;align-items:center;gap:9px;border:1px solid #d8b4fe;border-radius:12px;padding:11px 15px;background:#fff;flex-wrap:wrap}
+.tnum{font-size:26px;font-weight:500;font-family:'Courier New',monospace;color:#9333ea;min-width:80px;transition:color .3s}
+.tnum.warn{color:#d97706}.tnum.danger{color:#dc2626}
+.tinfo{flex:1;min-width:130px}.tinfo p{font-size:12px;color:#64748b;margin-top:1px}
+.tinfo strong{font-size:13px;color:#1e293b;font-weight:600}
+.tbtn{font-size:12px;padding:6px 14px;border-radius:7px;border:none;background:#9333ea;color:#fff;cursor:pointer;font-family:inherit;transition:background .15s;white-space:nowrap}
+.tbtn:hover{background:#7e22ce}.tbtn.sec{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+.tbtn.sec:hover{background:#e2e8f0}.tbtn:disabled{opacity:.4;pointer-events:none}
+.tabs{display:flex;gap:0;border-bottom:1px solid #d8b4fe;overflow-x:auto}
+.tab{font-size:12px;font-weight:600;padding:9px 16px;cursor:pointer;color:#64748b;transition:all .15s;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.on{color:#7e22ce;border-bottom-color:#9333ea}
+.tab:hover:not(.on){color:#9333ea}
+.tab-pane{display:none;padding:16px 19px}
+.tab-pane.on{display:block}
+.desc-txt{font-size:13px;color:#475569;line-height:1.8}
+.desc-txt strong{color:#1e293b;font-weight:600}
+.code-blk{background:#1e293b;border-radius:8px;padding:13px 16px;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;color:#94a3b8;margin:10px 0;overflow-x:auto;white-space:pre}
+.k{color:#93c5fd}.t{color:#34d399}.v{color:#6ee7b7}.s{color:#fda4af}.c{color:#475569;font-style:italic}.fn{color:#fbbf24}.cl{color:#c4b5fd}.an{color:#fb923c}
+.ent{border:1px solid #d8b4fe;border-radius:12px;padding:13px 15px;background:#fdf4ff}
+.et{font-size:11px;font-weight:600;color:#7e22ce;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.ep{font-size:13px;color:#475569;line-height:1.8}
+.sbox{display:none;background:#fdf4ff;border:2px solid #d8b4fe;border-radius:14px;padding:22px;text-align:center}
+.sbox.show{display:block;animation:pop .4s ease}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.sbox h3{font-size:18px;font-weight:700;color:#9333ea;margin-bottom:7px}
+.sbox p{font-size:13px;color:#581c87;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brief">
+    <div class="bt">
+      <div class="badge">Desafio autônomo · 3 Níveis · 60 minutos</div>
+      <div class="btitle">✈️ Agência Vai & Vem — Sistema de Reserva de Passagens</div>
+      <div class="bsub">Scanner, nextLine(), nextDouble(), nextInt(), limpeza de buffer, validação e formatação de relatórios interativos.</div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab on" onclick="showTab(0)">🟢 Básico</div>
+      <div class="tab" onclick="showTab(1)">🟡 Médio</div>
+      <div class="tab" onclick="showTab(2)">🔴 Avançado</div>
+    </div>
+
+    <div class="tab-pane on" id="tp0">
+      <div class="desc-txt">
+        <strong>Nível Básico — 15 min</strong><br><br>
+        Crie <code>ReservaSimples.java</code>. Use Scanner para coletar os dados de <strong>um único passageiro</strong> e emitir um bilhete de embarque.<br><br>
+        <strong>Leituras obrigatórias (na ordem certa!):</strong><br>
+        &nbsp;&nbsp;1. Nome completo do passageiro — <code>nextLine()</code><br>
+        &nbsp;&nbsp;2. Número do CPF — <code>nextLine()</code> (leia como String, não número!)<br>
+        &nbsp;&nbsp;3. Número de bagagens — <code>nextInt()</code><br>
+        &nbsp;&nbsp;4. Assento preferencial? — <code>nextBoolean()</code><br><br>
+        <strong>Calcule:</strong><br>
+        &nbsp;&nbsp;• Taxa de bagagem: 1ª gratuita, demais R$89,90 cada<br>
+        &nbsp;&nbsp;• Taxa de assento preferencial: R$45,00 se true<br>
+        &nbsp;&nbsp;• Número do bilhete: <code>int bilhete = cpf.length() * bagagens + 1000</code> (use a String)<br><br>
+        <strong>Saída esperada:</strong>
+      </div>
+      <div class="code-blk">╔══════════════════════════════════╗
+║    BILHETE DE EMBARQUE           ║
+╚══════════════════════════════════╝
+Passageiro : Ana Paula Souza
+CPF        : 123.456.789-00
+Bilhete nº : 1033
+Bagagens   : 2 (1 gratuita + 1 extra)
+Preferencial: SIM
+──────────────────────────────────
+Taxa bagagem  : R$  89,90
+Taxa assento  : R$  45,00
+TOTAL TAXAS   : R$ 134,90</div>
+    </div>
+
+    <div class="tab-pane" id="tp1">
+      <div class="desc-txt">
+        <strong>Nível Médio — 22 min</strong><br><br>
+        Crie <code>ReservaVoo.java</code>. Leia dados de <strong>um voo completo</strong>: informações do voo + 3 passageiros, cada um com seu próprio conjunto de dados.<br><br>
+        <strong>Dados do voo (leia primeiro):</strong><br>
+        &nbsp;&nbsp;• Código do voo — <code>next()</code>, ex: <code>"LA3045"</code><br>
+        &nbsp;&nbsp;• Origem e destino — <code>next()</code> para cada<br>
+        &nbsp;&nbsp;• Preço base da passagem — <code>nextDouble()</code><br>
+        &nbsp;&nbsp;• Duração em horas — <code>int</code><br><br>
+        <strong>Para cada um dos 3 passageiros, leia:</strong><br>
+        &nbsp;&nbsp;• Nome — <code>nextLine()</code> (atenção ao buffer!)<br>
+        &nbsp;&nbsp;• Classe: 1=econômica, 2=executiva — <code>nextInt()</code><br>
+        &nbsp;&nbsp;• Multiplicador: econômica=1.0x, executiva=2.3x<br><br>
+        <strong>Calcule e exiba:</strong> valor individual de cada passageiro, total do voo, média por passageiro e receita total da companhia<br><br>
+        <strong>Teste:</strong> voo LA3045 SP→RJ, preço base=320.00, duração=1h<br>
+        → passageiro 1 econômica=R$320 | passageiro 2 executiva=R$736 | total=R$1.376
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tp2">
+      <div class="desc-txt">
+        <strong>Nível Avançado — 23 min</strong><br><br>
+        Crie <code>AgenciaCompleta.java</code>. Sistema completo com <strong>menu interativo</strong> e <strong>validação de entradas</strong>.<br><br>
+        1. <strong>Menu inicial</strong> — leia a opção com <code>nextInt()</code>:
+        <div class="code-blk">╔══════════════════════════════╗
+║   AGÊNCIA VAI & VEM          ║
+╠══════════════════════════════╣
+║  1. Nova reserva             ║
+║  2. Calcular seguro viagem   ║
+║  3. Cotação de milhas        ║
+╚══════════════════════════════╝
+Opção: _</div>
+        2. <strong>Opção 1 — Nova reserva:</strong> leia nome, CPF, destino, data (como String), nº passageiros (1-9), classe<br>
+        &nbsp;&nbsp;→ Valide: se nº passageiros < 1 ou > 9, exiba erro e encerre<br>
+        &nbsp;&nbsp;→ Exiba comprovante com código de reserva gerado: <code>(int)(Math.random() * 90000) + 10000</code><br><br>
+        3. <strong>Opção 2 — Seguro viagem:</strong> leia destino (nacional/internacional como boolean), duração (dias) e valor da viagem<br>
+        &nbsp;&nbsp;→ Nacional: 0.8% do valor da viagem + R$2,50/dia<br>
+        &nbsp;&nbsp;→ Internacional: 2.1% do valor + R$5,00/dia<br><br>
+        4. <strong>Opção 3 — Milhas:</strong> leia km do voo e categoria do cliente (char: 'P' prata, 'O' ouro, 'D' diamante)<br>
+        &nbsp;&nbsp;→ Prata=1x, Ouro=1.5x, Diamante=2x os km voados<br>
+        &nbsp;&nbsp;→ Se opção inválida: "Opção não existe!"<br><br>
+
+        <div class="two" style="margin-top:14px">
+          <div>
+            <div class="colt">Critérios de avaliação</div>
+            <div class="crit-list">
+              <div class="ci"><div class="cd"></div>CPF lido como <code>String</code> (não int/long)</div>
+              <div class="ci"><div class="cd"></div><code>sc.nextLine()</code> de limpeza após métodos numéricos</div>
+              <div class="ci"><div class="cd"></div>Menu com <code>if/else if</code> cobrindo opção inválida</div>
+              <div class="ci"><div class="cd"></div>Validação de nº de passageiros com <code>System.exit(1)</code></div>
+              <div class="ci"><div class="cd"></div>Multiplicador de milhas com <code>char</code> e switch/if</div>
+              <div class="ci"><div class="cd g"></div>Bônus: formatar CPF com <code>printf</code> como XXX.XXX.XXX-XX</div>
+              <div class="ci"><div class="cd g"></div>Bônus: exibir duração do voo em horas e minutos</div>
+            </div>
+          </div>
+          <div>
+            <div class="colt">Checklist de entrega</div>
+            <div class="req-wrap" id="req-list"></div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="ent">
+    <div class="et">Armadilhas e dicas críticas</div>
+    <div class="ep">
+      <strong>⚠️ Armadilha principal:</strong> ao ler o <code>int</code> de bagagens e depois usar <code>nextBoolean()</code> ou <code>nextLine()</code>, sempre adicione <code>sc.nextLine();</code> extra para consumir o <code>\n</code> residual.<br><br>
+      <strong>CPF como String:</strong> CPFs com zeros à esquerda (ex: 001.234.567-89) perderiam o zero se lidos como int. Sempre use <code>nextLine()</code> para documentos.<br><br>
+      <strong>Teste sugerido:</strong> nome="Ana Paula Souza", CPF="123.456.789-00", bagagens=2, preferencial=true<br>
+      → taxaBagagem=89.90 (1 extra) | taxaAssento=45.00 | total=134.90
+    </div>
+  </div>
+
+  <div class="pw">
+    <div class="pl"><strong>Progresso</strong><span id="ptxt">0 de 8 concluídos</span></div>
+    <div class="pbg"><div class="pfill" id="pfill"></div></div>
+    <div class="pm" id="pmsg">Comece pelo nível básico: crie ReservaSimples.java e leia os dados na ordem certa.</div>
+  </div>
+
+  <div class="tr">
+    <div class="tnum" id="tnum">60:00</div>
+    <div class="tinfo"><strong>Cronômetro</strong><p id="tmsg">Inicie quando o docente autorizar</p></div>
+    <button class="tbtn" id="tbtn" onclick="timerClick()">Iniciar</button>
+    <button class="tbtn sec" onclick="timerReset()">Zerar</button>
+  </div>
+
+  <div class="sbox" id="success">
+    <h3>✈️ Voo confirmado!</h3>
+    <p>Scanner, limpeza de buffer, validação e menus interativos — dominados!<br>Próximo desafio: <strong>Condicionais — Sistema Meteorológico de Alertas!</strong></p>
+  </div>
+</div>
+
+<script>
+const REQS=[
+  {t:'Criar <code>ReservaSimples.java</code> lendo nome e CPF com <code>nextLine()</code> (CPF como String)'},
+  {t:'Ler bagagens com <code>nextInt()</code> e preferencial com <code>nextBoolean()</code> sem erro de buffer'},
+  {t:'Calcular taxa de bagagem (1ª grátis, demais R$89,90) e taxa de assento (R$45 se true)'},
+  {t:'Emitir bilhete formatado com número gerado a partir do CPF e bagagens'},
+  {t:'Criar <code>ReservaVoo.java</code> lendo dados de 1 voo + 3 passageiros corretamente'},
+  {t:'Calcular valores individuais com multiplicador (econômica=1x, executiva=2.3x) e total do voo'},
+  {t:'Criar <code>AgenciaCompleta.java</code> com menu de 3 opções e tratamento de opção inválida'},
+  {t:'Validar nº de passageiros (1-9) com mensagem de erro + <code>System.exit(1)</code>'},
+];
+const MSGS=[
+  'Leia nome e CPF com nextLine() — CPF deve ser String para preservar zeros.',
+  'Dados lidos! Calcule as taxas de bagagem e assento preferencial.',
+  'Cálculos ok! Emita o bilhete formatado com printf.',
+  'Básico pronto! Crie ReservaVoo.java com dados de voo + 3 passageiros.',
+  'Leia os 3 passageiros — atenção ao nextLine() após nextInt().',
+  'Médio concluído! Crie AgenciaCompleta.java com o menu de 3 opções.',
+  'Menu criado! Implemente as 3 opções com lógicas distintas.',
+  'Tudo pronto! Teste todas as opções do menu e mostre ao docente.',
+];
+const TOTAL_SEC = 60*60;
+let done=new Set(),ticking=false,tSec=TOTAL_SEC,tInterval=null;
+function showTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',i===j));
+  document.querySelectorAll('.tab-pane').forEach((p,j)=>p.classList.toggle('on',i===j));
+}
+function buildReqs(){
+  const el=document.getElementById('req-list');
+  REQS.forEach((r,i)=>{
+    const d=document.createElement('div');d.className='ri2';d.style.marginBottom='5px';
+    d.innerHTML=`<div class="rc" id="rc-${i}" onclick="chk(${i})"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="rt2" id="rt-${i}">${r.t}</div>`;
+    el.appendChild(d);
+  });
+}
+function chk(i){
+  if(done.has(i)){done.delete(i);document.getElementById('rc-'+i).classList.remove('on');document.getElementById('rt-'+i).classList.remove('done');}
+  else{done.add(i);document.getElementById('rc-'+i).classList.add('on');document.getElementById('rt-'+i).classList.add('done');}
+  const n=done.size;
+  document.getElementById('pfill').style.width=Math.round((n/REQS.length)*100)+'%';
+  document.getElementById('ptxt').textContent=n+' de '+REQS.length+' concluídos';
+  document.getElementById('pmsg').textContent=MSGS[Math.min(n,MSGS.length-1)];
+  if(n===REQS.length)document.getElementById('success').classList.add('show');
+  else document.getElementById('success').classList.remove('show');
+}
+function timerClick(){
+  if(!ticking){
+    ticking=true;document.getElementById('tbtn').textContent='Pausar';document.getElementById('tbtn').style.background='#475569';
+    document.getElementById('tmsg').textContent='Em andamento';
+    tInterval=setInterval(()=>{
+      tSec--;const m=Math.floor(tSec/60),s=tSec%60;
+      const el=document.getElementById('tnum');
+      el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+      el.className='tnum'+(tSec<=120?' danger':tSec<=600?' warn':'');
+      if(tSec===1800)document.getElementById('tmsg').textContent='30 min — básico e médio prontos?';
+      if(tSec===600)document.getElementById('tmsg').textContent='10 min — finalize e teste!';
+      if(tSec===120)document.getElementById('tmsg').textContent='2 min — chame o docente!';
+      if(tSec<=0){clearInterval(tInterval);ticking=false;document.getElementById('tbtn').disabled=true;document.getElementById('tmsg').textContent='Tempo esgotado!';}
+    },1000);
+  }else{
+    ticking=false;clearInterval(tInterval);
+    document.getElementById('tbtn').textContent='Continuar';document.getElementById('tbtn').style.background='#9333ea';
+  }
+}
+function timerReset(){
+  clearInterval(tInterval);ticking=false;tSec=TOTAL_SEC;
+  document.getElementById('tnum').textContent='60:00';document.getElementById('tnum').className='tnum';
+  document.getElementById('tbtn').textContent='Iniciar';document.getElementById('tbtn').style.background='#9333ea';
+  document.getElementById('tbtn').disabled=false;
+  document.getElementById('tmsg').textContent='Inicie quando o docente autorizar';
+}
+buildReqs();
+</script>
+
+<div style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #d8b4fe;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:999;gap:12px">
+  <a href="java_a02_pratica_scanner.html" style="display:inline-flex;align-items:center;gap:7px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;transition:background .15s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">← Prática Guiada</a>
+  <div style="font-size:11px;color:#94a3b8;font-family:'Courier New',monospace;text-align:center;flex:1">Aula 02 · Tópico 3 · Desafio — Scanner</div>
+  <a href="java_a02_desafio_condicionais.html" style="display:inline-flex;align-items:center;gap:7px;background:#9333ea;color:#fff;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='#7e22ce'" onmouseout="this.style.background='#9333ea'">Próximo Desafio →</a>
+</div>
+<div style="height:52px"></div>
+</body>
+</html>

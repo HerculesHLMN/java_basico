@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafio — Tipos de Dados e Variáveis · Aula 02</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;color:#1e293b;background:#f0fdf4;min-height:100vh;padding:22px}
+.wrap{max-width:940px;margin:0 auto;display:flex;flex-direction:column;gap:11px}
+.brief{border:1px solid #86efac;border-radius:12px;overflow:hidden;background:#fff}
+.bt{background:#f0fdf4;padding:17px 19px;border-bottom:1px solid #86efac}
+.badge{font-size:11px;font-weight:600;background:#16a34a;color:#fff;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:7px}
+.btitle{font-size:19px;font-weight:600;color:#14532d;margin-bottom:3px}
+.bsub{font-size:13px;color:#15803d}
+.bb{padding:15px 19px}
+.ctx{background:#f0fdf4;border-radius:8px;padding:11px 13px;font-size:13px;color:#475569;line-height:1.6;margin-bottom:13px;border-left:3px solid #16a34a}
+.ctx strong{color:#1e293b;font-weight:600;display:block;margin-bottom:3px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.two{grid-template-columns:1fr}}
+.colt{font-size:11px;font-weight:600;color:#64748b;margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em}
+.req-wrap{display:flex;flex-direction:column;gap:5px}
+.ri2{display:flex;gap:9px;align-items:flex-start}
+.rc{width:19px;height:19px;min-width:19px;border-radius:5px;border:1.5px solid #cbd5e1;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:2px;background:#fff;transition:all .15s;flex-shrink:0}
+.rc:hover{border-color:#16a34a;background:#f0fdf4}.rc.on{background:#22c55e;border-color:#22c55e}
+.rc svg{display:none}.rc.on svg{display:block}
+.rt2{font-size:12.5px;color:#475569;line-height:1.5}.rt2.done{color:#94a3b8;text-decoration:line-through}
+code{font-family:'Courier New',monospace;font-size:11.5px;background:#f1f5f9;padding:1px 5px;border-radius:3px;border:1px solid #e2e8f0}
+.crit-list{display:flex;flex-direction:column;gap:5px}
+.ci{display:flex;align-items:flex-start;gap:7px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:7px 10px;font-size:12px;color:#475569}
+.cd{width:5px;height:5px;min-width:5px;border-radius:50%;background:#16a34a;flex-shrink:0;margin-top:5px}
+.cd.g{background:#22c55e}
+.pw{border:1px solid #e2e8f0;border-radius:12px;padding:13px 15px;background:#fff}
+.pl{font-size:12px;color:#64748b;margin-bottom:7px;display:flex;justify-content:space-between}
+.pl strong{color:#1e293b;font-weight:600}
+.pbg{height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin-bottom:9px}
+.pfill{height:100%;background:#16a34a;border-radius:4px;transition:width .4s ease;width:0%}
+.pm{font-size:12px;color:#64748b;font-style:italic}
+.tr{display:flex;align-items:center;gap:9px;border:1px solid #86efac;border-radius:12px;padding:11px 15px;background:#fff;flex-wrap:wrap}
+.tnum{font-size:26px;font-weight:500;font-family:'Courier New',monospace;color:#16a34a;min-width:80px;transition:color .3s}
+.tnum.warn{color:#d97706}.tnum.danger{color:#dc2626}
+.tinfo{flex:1;min-width:130px}.tinfo p{font-size:12px;color:#64748b;margin-top:1px}
+.tinfo strong{font-size:13px;color:#1e293b;font-weight:600}
+.tbtn{font-size:12px;padding:6px 14px;border-radius:7px;border:none;background:#16a34a;color:#fff;cursor:pointer;font-family:inherit;transition:background .15s;white-space:nowrap}
+.tbtn:hover{background:#15803d}.tbtn.sec{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+.tbtn.sec:hover{background:#e2e8f0}.tbtn:disabled{opacity:.4;pointer-events:none}
+.tabs{display:flex;gap:0;border-bottom:1px solid #86efac;overflow-x:auto}
+.tab{font-size:12px;font-weight:600;padding:9px 16px;cursor:pointer;color:#64748b;transition:all .15s;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.on{color:#15803d;border-bottom-color:#16a34a}
+.tab:hover:not(.on){color:#16a34a}
+.tab-pane{display:none;padding:16px 19px}
+.tab-pane.on{display:block}
+.desc-txt{font-size:13px;color:#475569;line-height:1.8}
+.desc-txt strong{color:#1e293b;font-weight:600}
+.code-blk{background:#1e293b;border-radius:8px;padding:13px 16px;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;color:#94a3b8;margin:10px 0;overflow-x:auto;white-space:pre}
+.k{color:#93c5fd}.t{color:#34d399}.v{color:#6ee7b7}.s{color:#fda4af}.c{color:#475569;font-style:italic}.fn{color:#fbbf24}.cl{color:#c4b5fd}.an{color:#fb923c}
+.ent{border:1px solid #86efac;border-radius:12px;padding:13px 15px;background:#f0fdf4}
+.et{font-size:11px;font-weight:600;color:#15803d;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.ep{font-size:13px;color:#475569;line-height:1.8}
+.sbox{display:none;background:#f0fdf4;border:2px solid #86efac;border-radius:14px;padding:22px;text-align:center}
+.sbox.show{display:block;animation:pop .4s ease}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.sbox h3{font-size:18px;font-weight:700;color:#16a34a;margin-bottom:7px}
+.sbox p{font-size:13px;color:#14532d;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brief">
+    <div class="bt">
+      <div class="badge">Desafio autônomo · 3 Níveis · 55 minutos</div>
+      <div class="btitle">🛰️ Painel de Telemetria — Satélite em Órbita</div>
+      <div class="bsub">tipos primitivos, casting, constantes final, limites de tipos e printf integrados em um sistema real de monitoramento.</div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab on" onclick="showTab(0)">🟢 Básico</div>
+      <div class="tab" onclick="showTab(1)">🟡 Médio</div>
+      <div class="tab" onclick="showTab(2)">🔴 Avançado</div>
+    </div>
+
+    <div class="tab-pane on" id="tp0">
+      <div class="desc-txt">
+        <strong>Nível Básico — 15 min</strong><br><br>
+        Crie <code>Satelite.java</code>. Declare variáveis <strong>fixas</strong> (sem Scanner) representando os dados de telemetria de um satélite e imprima o painel de controle.<br><br>
+        <strong>Variáveis obrigatórias (use os tipos corretos):</strong><br>
+        &nbsp;&nbsp;• <code>String nomeSatelite</code> — ex: <code>"StarLink-42"</code><br>
+        &nbsp;&nbsp;• <code>int altitudeKm</code> — altitude em km, ex: <code>550</code><br>
+        &nbsp;&nbsp;• <code>double velocidadeKms</code> — velocidade em km/s, ex: <code>7.66</code><br>
+        &nbsp;&nbsp;• <code>float temperaturaC</code> — temperatura do painel solar em °C, ex: <code>126.5f</code><br>
+        &nbsp;&nbsp;• <code>long orbitas</code> — total de órbitas completadas, ex: <code>28_745L</code><br>
+        &nbsp;&nbsp;• <code>boolean painelSolarAtivo</code> — ex: <code>true</code><br>
+        &nbsp;&nbsp;• <code>char statusMissao</code> — <code>'N'</code> normal, <code>'A'</code> alerta, <code>'C'</code> crítico<br><br>
+        <strong>Saída esperada:</strong>
+      </div>
+      <div class="code-blk">╔══════════════════════════════╗
+║   PAINEL DE TELEMETRIA       ║
+╚══════════════════════════════╝
+Satélite  : StarLink-42
+Altitude  : 550 km
+Velocidade: 7.66 km/s
+Temp.Painel: 126.5 °C
+Órbitas   : 28745
+Painel Solar: ATIVO
+Status    : N (Normal)</div>
+    </div>
+
+    <div class="tab-pane" id="tp1">
+      <div class="desc-txt">
+        <strong>Nível Médio — 20 min</strong><br><br>
+        Crie <code>TelemetriaCalc.java</code>. Mantenha as variáveis fixas do básico e adicione <strong>cálculos derivados</strong> com casting entre tipos.<br><br>
+        <strong>Cálculos obrigatórios:</strong><br>
+        &nbsp;&nbsp;1. <strong>Período orbital</strong> (minutos): <code>periodo = (2 * 3.14159 * (6371 + altitudeKm)) / (velocidadeKms * 60)</code><br>
+        &nbsp;&nbsp;2. <strong>Velocidade em km/h</strong>: <code>velKmh = velocidadeKms * 3600</code><br>
+        &nbsp;&nbsp;3. <strong>Temperatura em Fahrenheit</strong>: <code>tempF = temperaturaC * 9.0f / 5.0f + 32</code><br>
+        &nbsp;&nbsp;4. <strong>Órbitas inteiras por dia</strong>: use casting <code>int orbitasDia = (int)(1440 / periodo)</code><br>
+        &nbsp;&nbsp;5. <strong>Tempo total em órbita (anos)</strong>: <code>double anos = orbitas * periodo / 525_600.0</code><br><br>
+        <strong>Teste com altitude=550, velocidade=7.66:</strong><br>
+        → período ≈ 95.5 min → ~15 órbitas/dia → ~5.2 anos em órbita
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tp2">
+      <div class="desc-txt">
+        <strong>Nível Avançado — 20 min</strong><br><br>
+        Crie <code>TelemetriaCompleta.java</code>. Adicione ao nível médio:<br><br>
+        1. <strong>Constantes da missão:</strong>
+        <div class="code-blk"><span class="k">final</span> <span class="t">double</span> RAIO_TERRA   = <span class="v">6_371.0</span>;   <span class="c">// km</span>
+<span class="k">final</span> <span class="t">double</span> GRAVIDADE    = <span class="v">9.807</span>;     <span class="c">// m/s²</span>
+<span class="k">final</span> <span class="t">int</span>    VIDA_UTIL_DIAS = <span class="v">1_825</span>;    <span class="c">// 5 anos</span></div>
+        2. <strong>Verificações de limites:</strong> use <code>Byte.MAX_VALUE</code>, <code>Float.MAX_VALUE</code> para comentar nos prints se os valores estão dentro da faixa segura dos tipos<br><br>
+        3. <strong>Conversão de órbitas para diferentes tipos:</strong> mostre o mesmo valor de <code>orbitas</code> armazenado em byte (com overflow visível!), short, int e long — explique em comentários o que acontece<br><br>
+        4. <strong>Relatório final</strong> com alinhamento usando <code>%-20s %s</code> e separadores <code>"─".repeat(34)</code><br><br>
+        <strong>Saída esperada (trecho):</strong>
+      </div>
+      <div class="code-blk">══ TELEMETRIA AVANÇADA ══════════════
+Satélite             : StarLink-42
+Altitude             : 550 km
+Período orbital      : 95.47 min
+Órbitas/dia          : 15
+Anos em órbita       : 5.23 anos
+──────────────────────────────────────
+CONVERSÃO DE TIPOS (orbitas=28745):
+  byte  : -119   ← overflow! (28745 % 256 = 137, com sinal = -119)
+  short :  28745 ← ok! (max short = 32767)
+  int   :  28745 ← ok!
+  long  :  28745 ← ok!
+──────────────────────────────────────
+Temp painel: 126.5°C = 259.7°F
+Status atual: N → NORMAL ✓</div>
+
+        <div class="two" style="margin-top:14px">
+          <div>
+            <div class="colt">Critérios de avaliação</div>
+            <div class="crit-list">
+              <div class="ci"><div class="cd"></div>7 variáveis com tipos corretos (inclui float, long, char)</div>
+              <div class="ci"><div class="cd"></div>Casting explícito <code>(int)</code> usado corretamente</div>
+              <div class="ci"><div class="cd"></div>Constantes <code>final</code> em SNAKE_UPPER_CASE</div>
+              <div class="ci"><div class="cd"></div>Demonstração de overflow com byte</div>
+              <div class="ci"><div class="cd"></div>printf com alinhamento <code>%-20s</code></div>
+              <div class="ci"><div class="cd g"></div>Bônus: comentários explicando o overflow</div>
+              <div class="ci"><div class="cd g"></div>Bônus: temperatura em Kelvin (<code>K = °C + 273.15</code>)</div>
+            </div>
+          </div>
+          <div>
+            <div class="colt">Checklist de entrega</div>
+            <div class="req-wrap" id="req-list"></div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="ent">
+    <div class="et">Fórmulas e referências rápidas</div>
+    <div class="ep">
+      <strong>Período orbital:</strong> <code>(2 * Math.PI * (6371 + alt)) / (vel * 60)</code> — resultado em minutos<br>
+      <strong>Temperatura Fahrenheit:</strong> <code>C * 9.0f / 5.0f + 32</code> — o <code>9.0f</code> força divisão float<br>
+      <strong>Overflow de byte:</strong> byte vai de -128 a 127. O valor 28745 em byte: <code>(byte) 28745</code> → compilador trunca os bits → resultado: -119<br><br>
+      <strong>Valores de teste:</strong> altitude=550km, velocidade=7.66km/s, temperatura=126.5°C, órbitas=28745L<br>
+      → período≈95.47min | vel=27576km/h | tempF≈259.7°F | anos≈5.23
+    </div>
+  </div>
+
+  <div class="pw">
+    <div class="pl"><strong>Progresso</strong><span id="ptxt">0 de 8 concluídos</span></div>
+    <div class="pbg"><div class="pfill" id="pfill"></div></div>
+    <div class="pm" id="pmsg">Comece pelo nível básico: crie Satelite.java com as 7 variáveis.</div>
+  </div>
+
+  <div class="tr">
+    <div class="tnum" id="tnum">55:00</div>
+    <div class="tinfo"><strong>Cronômetro</strong><p id="tmsg">Inicie quando o docente autorizar</p></div>
+    <button class="tbtn" id="tbtn" onclick="timerClick()">Iniciar</button>
+    <button class="tbtn sec" onclick="timerReset()">Zerar</button>
+  </div>
+
+  <div class="sbox" id="success">
+    <h3>🛰️ Satélite em órbita!</h3>
+    <p>Tipos primitivos, casting, constantes e overflow — dominados!<br>Próximo desafio: <strong>Operadores — Calculadora de Corrida!</strong></p>
+  </div>
+</div>
+
+<script>
+const REQS=[
+  {t:'Criar <code>Satelite.java</code> com as 7 variáveis nos tipos corretos (inclui <code>float</code>, <code>long</code>, <code>char</code>)'},
+  {t:'Imprimir o painel básico com <code>println</code> ou <code>printf</code> formatado'},
+  {t:'Criar <code>TelemetriaCalc.java</code> e calcular período orbital corretamente'},
+  {t:'Calcular velocidade em km/h e temperatura em Fahrenheit com cast correto'},
+  {t:'Calcular órbitas por dia com cast <code>(int)</code> e anos em órbita como <code>double</code>'},
+  {t:'Criar <code>TelemetriaCompleta.java</code> com as 3 constantes <code>final</code>'},
+  {t:'Demonstrar overflow convertendo <code>orbitas</code> para <code>byte</code> com comentário explicativo'},
+  {t:'Relatório final alinhado com <code>%-20s</code> e separadores visuais'},
+];
+const MSGS=[
+  'Declare as 7 variáveis — atenção aos sufixos f e L em float e long.',
+  'Variáveis ok! Formate o painel com println ou printf.',
+  'Básico pronto! Calcule o período orbital em TelemetriaCalc.java.',
+  'Período calculado! Agora velocidade em km/h e temperatura em °F.',
+  'Conversões ok! Calcule órbitas/dia com cast (int) e anos como double.',
+  'Nível médio concluído! Adicione as 3 constantes final.',
+  'Constantes ok! Demonstre o overflow ao converter para byte.',
+  'Tudo pronto! Verifique o alinhamento do relatório e mostre ao docente.',
+];
+const TOTAL_SEC = 55*60;
+let done=new Set(),ticking=false,tSec=TOTAL_SEC,tInterval=null;
+function showTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',i===j));
+  document.querySelectorAll('.tab-pane').forEach((p,j)=>p.classList.toggle('on',i===j));
+}
+function buildReqs(){
+  const el=document.getElementById('req-list');
+  REQS.forEach((r,i)=>{
+    const d=document.createElement('div');d.className='ri2';d.style.marginBottom='5px';
+    d.innerHTML=`<div class="rc" id="rc-${i}" onclick="chk(${i})"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="rt2" id="rt-${i}">${r.t}</div>`;
+    el.appendChild(d);
+  });
+}
+function chk(i){
+  if(done.has(i)){done.delete(i);document.getElementById('rc-'+i).classList.remove('on');document.getElementById('rt-'+i).classList.remove('done');}
+  else{done.add(i);document.getElementById('rc-'+i).classList.add('on');document.getElementById('rt-'+i).classList.add('done');}
+  const n=done.size;
+  document.getElementById('pfill').style.width=Math.round((n/REQS.length)*100)+'%';
+  document.getElementById('ptxt').textContent=n+' de '+REQS.length+' concluídos';
+  document.getElementById('pmsg').textContent=MSGS[Math.min(n,MSGS.length-1)];
+  if(n===REQS.length)document.getElementById('success').classList.add('show');
+  else document.getElementById('success').classList.remove('show');
+}
+function timerClick(){
+  if(!ticking){
+    ticking=true;document.getElementById('tbtn').textContent='Pausar';document.getElementById('tbtn').style.background='#475569';
+    document.getElementById('tmsg').textContent='Em andamento';
+    tInterval=setInterval(()=>{
+      tSec--;const m=Math.floor(tSec/60),s=tSec%60;
+      const el=document.getElementById('tnum');
+      el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+      el.className='tnum'+(tSec<=120?' danger':tSec<=600?' warn':'');
+      if(tSec===1800)document.getElementById('tmsg').textContent='30 min — básico e médio prontos?';
+      if(tSec===600)document.getElementById('tmsg').textContent='10 min — finalize e teste!';
+      if(tSec===120)document.getElementById('tmsg').textContent='2 min — chame o docente!';
+      if(tSec<=0){clearInterval(tInterval);ticking=false;document.getElementById('tbtn').disabled=true;document.getElementById('tmsg').textContent='Tempo esgotado!';}
+    },1000);
+  }else{
+    ticking=false;clearInterval(tInterval);
+    document.getElementById('tbtn').textContent='Continuar';document.getElementById('tbtn').style.background='#16a34a';
+  }
+}
+function timerReset(){
+  clearInterval(tInterval);ticking=false;tSec=TOTAL_SEC;
+  document.getElementById('tnum').textContent='55:00';document.getElementById('tnum').className='tnum';
+  document.getElementById('tbtn').textContent='Iniciar';document.getElementById('tbtn').style.background='#16a34a';
+  document.getElementById('tbtn').disabled=false;
+  document.getElementById('tmsg').textContent='Inicie quando o docente autorizar';
+}
+buildReqs();
+</script>
+
+<div style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #86efac;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:999;gap:12px">
+  <a href="java_a02_pratica_tipos_dados.html" style="display:inline-flex;align-items:center;gap:7px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;border:1px solid #e2e8f0;transition:background .15s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">← Prática Guiada</a>
+  <div style="font-size:11px;color:#94a3b8;font-family:'Courier New',monospace;text-align:center;flex:1">Aula 02 · Tópico 1 · Desafio — Tipos de Dados</div>
+  <a href="java_a02_desafio_operadores.html" style="display:inline-flex;align-items:center;gap:7px;background:#16a34a;color:#fff;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">Próximo Desafio →</a>
+</div>
+<div style="height:52px"></div>
+</body>
+</html>
