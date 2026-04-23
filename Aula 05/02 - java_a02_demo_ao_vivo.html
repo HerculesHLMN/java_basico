@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo ao Vivo — Condições Java · Aula 02</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;color:#1e293b;background:#fff7ed;min-height:100vh;padding:20px}
+.wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.page-hdr{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.page-hdr h1{font-size:16px;font-weight:600}.page-hdr p{font-size:12px;color:#94a3b8}
+.prog-track{grid-column:1/-1;height:3px;background:#fed7aa;border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:#f97316;border-radius:2px;transition:width .3s ease;width:0%}
+.panel{border:1px solid #fdba74;border-radius:12px;overflow:hidden;background:#fff}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;border-bottom:1px solid #fdba74;background:#fff7ed}
+.pt{font-size:12px;font-weight:500;color:#c2410c}
+.dots-r{display:flex;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%}
+pre{background:#1e293b;color:#e2e8f0;padding:15px;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;min-height:320px;overflow:auto;white-space:pre}
+.cursor{display:inline-block;width:2px;height:14px;background:#fb923c;vertical-align:middle;animation:blink .9s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.preview-body{min-height:320px;overflow-y:auto;background:#f8fafc;padding:16px;font-family:'Courier New',monospace;font-size:13px;line-height:1.9}
+.out-line{padding:1px 0;color:#1e293b}
+.out-line.cm{color:#64748b;font-style:italic}
+.out-line.ok{color:#f97316;font-weight:600}
+.out-line.err{color:#dc2626}
+.out-line.prompt{color:#94a3b8}
+.step-bar{grid-column:1/-1;border:1px solid #fdba74;border-radius:12px;background:#fff;display:flex;align-items:center;gap:10px;padding:11px 15px;flex-wrap:wrap}
+.sbadge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap;background:#fff7ed;color:#f97316;border:1px solid #fdba74}
+.slabel{font-size:12px;color:#64748b;flex:1;line-height:1.4}
+.cb{font-size:12px;font-weight:500;padding:6px 14px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;color:#1e293b;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.cb:hover{background:#f1f5f9}.cb.go{background:#f97316;color:#fff;border-color:#f97316}.cb.go:hover{background:#ea580c}
+.cb:disabled{opacity:.35;pointer-events:none}
+.narr{grid-column:1/-1;border:1px solid #fdba74;border-radius:10px;padding:11px 15px;background:#fff7ed;font-size:13px;color:#7c2d12;line-height:1.6;min-height:50px}
+.narr strong{color:#c2410c;font-weight:600}
+.k{color:#93c5fd}.t{color:#34d399}.v{color:#6ee7b7}.s{color:#fda4af}.cm2{color:#475569;font-style:italic}.fn{color:#fbbf24}.cl{color:#c4b5fd}.an{color:#fb923c}
+@media(max-width:680px){.wrap{grid-template-columns:1fr}.panel:last-of-type{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="page-hdr"><h1>Demonstração ao vivo — Condições e Decisões em Java</h1><p>Aula 02 · 45 min · Docente digita no IDE, alunos acompanham</p></div>
+  <div class="prog-track"><div class="prog-fill" id="prog"></div></div>
+  <div class="panel">
+    <div class="ph"><span class="pt">IntelliJ IDEA / VS Code — Aula02.java</span><div class="dots-r"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#f59e0b"></div><div class="dot" style="background:#10b981"></div></div></div>
+    <pre><span id="code-out"></span><span class="cursor"></span></pre>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Output — Console</span><div class="dots-r"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#f59e0b"></div><div class="dot" style="background:#10b981"></div></div></div>
+    <div class="preview-body" id="preview"></div>
+  </div>
+  <div class="narr" id="narr">Pronto para começar. Clique em <strong>Iniciar digitação</strong>.</div>
+  <div class="step-bar">
+    <span class="sbadge" id="sbadge">Etapa 1 / 9</span>
+    <span class="slabel" id="sdesc">O if mais simples em Java</span>
+    <button class="cb" id="bp" onclick="prevS()" disabled>← Anterior</button>
+    <button class="cb go" id="bplay" onclick="playS()">▶ Iniciar digitação</button>
+    <button class="cb" id="bn" onclick="nextS()" disabled>Próxima →</button>
+  </div>
+</div>
+
+<script>
+const STEPS=[
+{label:'O if mais simples em Java',
+narr:'<strong>Docente:</strong> "Vamos começar com o mínimo. Em Java, o if exige parênteses ao redor da condição e chaves para delimitar o bloco. O ponto-e-vírgula termina cada instrução dentro do bloco."',
+code:`<span class="k">public class</span> <span class="cl">Aula02</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+
+        <span class="t">double</span> temperatura = <span class="v">38.5</span>;
+
+        <span class="k">if</span> (temperatura > <span class="v">37.5</span>) {
+            <span class="cl">System</span>.out.println(<span class="s">"Febre detectada!"</span>);
+        }
+
+        <span class="cl">System</span>.out.println(<span class="s">"Programa terminou."</span>);
+    }
+}`,
+prev:`<div class="out-line ok">Febre detectada!</div><div class="out-line ok">Programa terminou.</div>`},
+
+{label:'if com else — dois caminhos',
+narr:'<strong>Docente:</strong> "O else em Java funciona igual ao Python — captura quando a condição é false. Mas notem: em Java as chaves definem o bloco, não a indentação. Vamos trocar a temperatura."',
+code:`<span class="t">double</span> temperatura = <span class="v">36.8</span>;
+
+<span class="k">if</span> (temperatura > <span class="v">37.5</span>) {
+    <span class="cl">System</span>.out.println(<span class="s">"Febre detectada!"</span>);
+} <span class="k">else</span> {
+    <span class="cl">System</span>.out.println(<span class="s">"Temperatura normal."</span>);
+}
+
+<span class="cm2">// Troquem para 38.5 e vejam o outro caminho</span>`,
+prev:`<div class="out-line ok">Temperatura normal.</div>`},
+
+{label:'else if — múltiplas condições',
+narr:'<strong>Docente:</strong> "Atenção: em Java é else if (duas palavras com espaço), não elif como no Python. Vamos criar o classificador de notas com 4 conceitos."',
+code:`<span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+<span class="cl">System</span>.out.print(<span class="s">"Nota (0-10): "</span>);
+<span class="t">double</span> nota = sc.nextDouble();
+
+<span class="k">if</span> (nota >= <span class="v">9.0</span>) {
+    <span class="cl">System</span>.out.println(<span class="s">"Conceito A — Excelente!"</span>);
+} <span class="k">else if</span> (nota >= <span class="v">7.0</span>) {
+    <span class="cl">System</span>.out.println(<span class="s">"Conceito B — Bom!"</span>);
+} <span class="k">else if</span> (nota >= <span class="v">5.0</span>) {
+    <span class="cl">System</span>.out.println(<span class="s">"Conceito C — Aprovado"</span>);
+} <span class="k">else</span> {
+    <span class="cl">System</span>.out.println(<span class="s">"Reprovado"</span>);
+}`,
+prev:`<div class="out-line prompt">Nota (0-10): <span style="color:#f97316">8</span></div><div class="out-line ok">Conceito B — Bom!</div>`},
+
+{label:'Operadores de comparação',
+narr:'<strong>Docente:</strong> "Os operadores são quase idênticos ao Python. A grande diferença é com Strings — NUNCA usem == para comparar texto em Java. Sempre .equals(). Vou mostrar por quê."',
+code:`<span class="t">int</span> x = <span class="v">10</span>;
+
+<span class="cl">System</span>.out.println(x == <span class="v">10</span>); <span class="cm2">// true  → igual</span>
+<span class="cl">System</span>.out.println(x != <span class="v">5</span>);  <span class="cm2">// true  → diferente</span>
+<span class="cl">System</span>.out.println(x >  <span class="v">8</span>);  <span class="cm2">// true  → maior</span>
+<span class="cl">System</span>.out.println(x <  <span class="v">8</span>);  <span class="cm2">// false → menor</span>
+<span class="cl">System</span>.out.println(x >= <span class="v">10</span>); <span class="cm2">// true  → maior ou igual</span>
+<span class="cl">System</span>.out.println(x <= <span class="v">9</span>);  <span class="cm2">// false → menor ou igual</span>
+
+<span class="cm2">// ⚠️ String: SEMPRE .equals()</span>
+<span class="cl">String</span> cor = <span class="s">"azul"</span>;
+<span class="k">if</span> (cor.equals(<span class="s">"azul"</span>)) {
+    <span class="cl">System</span>.out.println(<span class="s">"É azul!"</span>);
+}`,
+prev:`<div class="out-line ok">true</div><div class="out-line ok">true</div><div class="out-line ok">true</div><div class="out-line ok">false</div><div class="out-line ok">true</div><div class="out-line ok">false</div><div class="out-line ok">É azul!</div>`},
+
+{label:'&&, ||, ! — lógica em Java',
+narr:'<strong>Docente:</strong> "Em Python escrevemos and, or, not por extenso. Em Java usamos símbolos: && para AND, || para OR, ! para NOT. Mesma lógica, sintaxe diferente."',
+code:`<span class="t">int</span>     idade      = <span class="v">20</span>;
+<span class="t">boolean</span> temIngresso = <span class="k">true</span>;
+
+<span class="cm2">// && → as duas devem ser true</span>
+<span class="k">if</span> (idade >= <span class="v">18</span> && temIngresso) {
+    <span class="cl">System</span>.out.println(<span class="s">"Acesso liberado!"</span>);
+} <span class="k">else</span> {
+    <span class="cl">System</span>.out.println(<span class="s">"Acesso negado."</span>);
+}
+
+<span class="cm2">// || → basta uma ser true</span>
+<span class="t">boolean</span> vip = <span class="k">false</span>;
+<span class="k">if</span> (temIngresso || vip) {
+    <span class="cl">System</span>.out.println(<span class="s">"Pode entrar"</span>);
+}`,
+prev:`<div class="out-line ok">Acesso liberado!</div><div class="out-line ok">Pode entrar</div>`},
+
+{label:'Erro clássico — = vs == e String',
+narr:'<strong>Docente:</strong> "Dois erros super comuns em Java: usar = em vez de == dentro do if, e usar == para comparar Strings. Vou mostrar os dois e o que acontece."',
+code:`<span class="cm2">// Erro 1: = em vez de == → erro de compilação</span>
+<span class="cm2">// if (x = 10)  ← ERRO! = não retorna boolean</span>
+<span class="cm2">// if (x == 10) ← CORRETO</span>
+
+<span class="cm2">// Erro 2: == com String → comportamento inesperado</span>
+<span class="cl">String</span> s1 = <span class="k">new</span> <span class="cl">String</span>(<span class="s">"Java"</span>);
+<span class="cl">String</span> s2 = <span class="k">new</span> <span class="cl">String</span>(<span class="s">"Java"</span>);
+
+<span class="cl">System</span>.out.println(s1 == s2);       <span class="cm2">// false! (compara ref.)</span>
+<span class="cl">System</span>.out.println(s1.equals(s2));  <span class="cm2">// true  (compara valor)</span>
+
+<span class="cm2">// ✅ Sempre use .equals() para String</span>
+<span class="k">if</span> (s1.equals(<span class="s">"Java"</span>)) {
+    <span class="cl">System</span>.out.println(<span class="s">"É Java!"</span>);
+}`,
+prev:`<div class="out-line err">false</div><div class="out-line ok">true</div><div class="out-line ok">É Java!</div>`},
+
+{label:'if aninhado — decisão dentro de decisão',
+narr:'<strong>Docente:</strong> "Assim como Python, podemos aninhar ifs em Java. Cada nível adiciona um par de chaves e mais indentação. Cuidado: muitos níveis tornam o código difícil de ler."',
+code:`<span class="cl">String</span> usuario = <span class="s">"admin"</span>;
+<span class="cl">String</span> senha   = <span class="s">"1234"</span>;
+
+<span class="k">if</span> (usuario.equals(<span class="s">"admin"</span>)) {
+    <span class="cl">System</span>.out.println(<span class="s">"Usuário encontrado!"</span>);
+
+    <span class="k">if</span> (senha.equals(<span class="s">"1234"</span>)) {
+        <span class="cl">System</span>.out.println(<span class="s">"Senha correta. Bem-vindo!"</span>);
+    } <span class="k">else</span> {
+        <span class="cl">System</span>.out.println(<span class="s">"Senha incorreta."</span>);
+    }
+} <span class="k">else</span> {
+    <span class="cl">System</span>.out.println(<span class="s">"Usuário não encontrado."</span>);
+}`,
+prev:`<div class="out-line ok">Usuário encontrado!</div><div class="out-line ok">Senha correta. Bem-vindo!</div>`},
+
+{label:'boolean como variável — legibilidade',
+narr:'<strong>Docente:</strong> "Em Java é muito comum guardar condições em variáveis boolean com nomes descritivos. O código fica mais legível — o if parece quase língua natural."',
+code:`<span class="t">int</span>     idade           = <span class="v">22</span>;
+<span class="t">double</span>  salario         = <span class="v">3500.0</span>;
+<span class="t">boolean</span> temEmprego       = <span class="k">true</span>;
+
+<span class="t">boolean</span> maiorDeIdade    = idade >= <span class="v">18</span>;
+<span class="t">boolean</span> rendaSuficiente = salario >= <span class="v">2000.0</span>;
+<span class="t">boolean</span> aprovado        = maiorDeIdade
+                          && rendaSuficiente
+                          && temEmprego;
+
+<span class="k">if</span> (aprovado) {
+    <span class="cl">System</span>.out.println(<span class="s">"Crédito aprovado!"</span>);
+} <span class="k">else</span> {
+    <span class="cl">System</span>.out.println(<span class="s">"Crédito negado."</span>);
+}`,
+prev:`<div class="out-line ok">Crédito aprovado!</div>`},
+
+{label:'Programa completo — Triagem médica',
+narr:'<strong>Docente:</strong> "Fechamos com o programa mais completo da aula: lê temperatura, pressão e dor via Scanner, e classifica a urgência usando if, else if, || e &&."',
+code:`<span class="an">import</span> java.util.Scanner;
+
+<span class="k">public class</span> <span class="cl">Triagem</span> {
+    <span class="k">public static void</span> <span class="fn">main</span>(<span class="cl">String</span>[] args) {
+        <span class="cl">Scanner</span> sc = <span class="k">new</span> <span class="cl">Scanner</span>(<span class="cl">System</span>.in);
+
+        <span class="t">double</span> temp  = sc.nextDouble();
+        <span class="t">int</span>    press = sc.nextInt();
+        <span class="t">int</span>    dor   = sc.nextInt();
+
+        <span class="cl">String</span> urgencia;
+
+        <span class="k">if</span> (temp > <span class="v">39.5</span> || press > <span class="v">180</span> || dor >= <span class="v">9</span>) {
+            urgencia = <span class="s">"🔴 VERMELHO — Emergência"</span>;
+        } <span class="k">else if</span> (temp > <span class="v">38.5</span> || press > <span class="v">160</span> || dor >= <span class="v">7</span>) {
+            urgencia = <span class="s">"🟠 LARANJA — Muito urgente"</span>;
+        } <span class="k">else if</span> (temp > <span class="v">37.5</span> || press > <span class="v">140</span> || dor >= <span class="v">4</span>) {
+            urgencia = <span class="s">"🟡 AMARELO — Urgente"</span>;
+        } <span class="k">else</span> {
+            urgencia = <span class="s">"🟢 VERDE — Pouco urgente"</span>;
+        }
+        <span class="cl">System</span>.out.println(urgencia);
+    }
+}`,
+prev:`<div class="out-line prompt">Temperatura: <span style="color:#f97316">40.1</span>  Pressão: <span style="color:#f97316">120</span>  Dor: <span style="color:#f97316">3</span></div><div class="out-line ok">🔴 VERMELHO — Emergência</div>`}
+];
+
+let cur=0,playing=false,timer=null;
+function render(){
+  document.getElementById('sbadge').textContent=`Etapa ${cur+1} / ${STEPS.length}`;
+  document.getElementById('sdesc').textContent=STEPS[cur].label;
+  document.getElementById('narr').innerHTML=STEPS[cur].narr;
+  document.getElementById('preview').innerHTML=STEPS[cur].prev;
+  document.getElementById('code-out').innerHTML='';
+  document.getElementById('prog').style.width=((cur+1)/STEPS.length*100)+'%';
+  document.getElementById('bp').disabled=cur===0;
+  document.getElementById('bn').disabled=cur===STEPS.length-1;
+  const pb=document.getElementById('bplay');pb.textContent='▶ Iniciar digitação';pb.className='cb go';
+}
+function playS(){
+  if(playing){clearTimeout(timer);playing=false;document.getElementById('bplay').textContent='▶ Iniciar digitação';return;}
+  playing=true;document.getElementById('bplay').textContent='⏸ Pausar';
+  const code=STEPS[cur].code;let i=0;const out=document.getElementById('code-out');out.innerHTML='';
+  function tick(){
+    if(!playing)return;
+    if(i<code.length){
+      if(code[i]==='<'){const end=code.indexOf('>',i);if(end>-1){out.innerHTML+=code.slice(i,end+1);i=end+1;}else{out.innerHTML+=code[i];i++;}}
+      else{out.innerHTML+=code[i];i++;}
+      timer=setTimeout(tick,i%7===0?16:4);
+    }else{playing=false;document.getElementById('bplay').textContent='✓ Concluído';document.getElementById('bn').disabled=cur===STEPS.length-1;}
+  }
+  tick();
+}
+function nextS(){if(cur<STEPS.length-1){cur++;render();}}
+function prevS(){if(cur>0){cur--;render();}}
+render();
+</script>
+</body>
+</html>

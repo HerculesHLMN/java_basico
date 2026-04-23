@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafio — Condições Java · Aula 02</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;color:#1e293b;background:#fff7ed;min-height:100vh;padding:22px}
+.wrap{max-width:940px;margin:0 auto;display:flex;flex-direction:column;gap:11px}
+.brief{border:1px solid #fdba74;border-radius:12px;overflow:hidden;background:#fff}
+.bt{background:#fff7ed;padding:17px 19px;border-bottom:1px solid #fdba74}
+.badge{font-size:11px;font-weight:600;background:#f97316;color:#fff;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:7px}
+.btitle{font-size:19px;font-weight:600;color:#7c2d12;margin-bottom:3px}
+.bsub{font-size:13px;color:#c2410c}
+.bb{padding:15px 19px}
+.ctx{background:#fff7ed;border-radius:8px;padding:11px 13px;font-size:13px;color:#475569;line-height:1.6;margin-bottom:13px;border-left:3px solid #f97316}
+.ctx strong{color:#1e293b;font-weight:600;display:block;margin-bottom:3px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.two{grid-template-columns:1fr}}
+.colt{font-size:11px;font-weight:600;color:#64748b;margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em}
+.req-wrap{display:flex;flex-direction:column;gap:5px}
+.ri{display:flex;gap:9px;align-items:flex-start}
+.rc{width:19px;height:19px;min-width:19px;border-radius:5px;border:1.5px solid #cbd5e1;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:2px;background:#fff;transition:all .15s;flex-shrink:0}
+.rc:hover{border-color:#f97316;background:#fff7ed}.rc.on{background:#22c55e;border-color:#22c55e}
+.rc svg{display:none}.rc.on svg{display:block}
+.rt{font-size:12.5px;color:#475569;line-height:1.5}.rt.done{color:#94a3b8;text-decoration:line-through}
+code{font-family:'Courier New',monospace;font-size:11.5px;background:#f1f5f9;padding:1px 5px;border-radius:3px;border:1px solid #e2e8f0}
+.crit-list{display:flex;flex-direction:column;gap:5px}
+.ci{display:flex;align-items:flex-start;gap:7px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:7px 10px;font-size:12px;color:#475569}
+.cd{width:5px;height:5px;min-width:5px;border-radius:50%;background:#f97316;flex-shrink:0;margin-top:5px}
+.cd.g{background:#22c55e}
+.pw{border:1px solid #e2e8f0;border-radius:12px;padding:13px 15px;background:#fff}
+.pl{font-size:12px;color:#64748b;margin-bottom:7px;display:flex;justify-content:space-between}
+.pl strong{color:#1e293b;font-weight:600}
+.pbg{height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin-bottom:9px}
+.pfill{height:100%;background:#f97316;border-radius:4px;transition:width .4s ease;width:0%}
+.pm{font-size:12px;color:#64748b;font-style:italic}
+.tr{display:flex;align-items:center;gap:9px;border:1px solid #fdba74;border-radius:12px;padding:11px 15px;background:#fff;flex-wrap:wrap}
+.tnum{font-size:26px;font-weight:500;font-family:'Courier New',monospace;color:#f97316;min-width:80px;transition:color .3s}
+.tnum.warn{color:#d97706}.tnum.danger{color:#dc2626}
+.tinfo{flex:1;min-width:130px}.tinfo p{font-size:12px;color:#64748b;margin-top:1px}
+.tinfo strong{font-size:13px;color:#1e293b;font-weight:600}
+.tbtn{font-size:12px;padding:6px 14px;border-radius:7px;border:none;background:#f97316;color:#fff;cursor:pointer;font-family:inherit;transition:background .15s;white-space:nowrap}
+.tbtn:hover{background:#ea580c}.tbtn.sec{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+.tbtn.sec:hover{background:#e2e8f0}.tbtn:disabled{opacity:.4;pointer-events:none}
+.tabs{display:flex;gap:6px;border-bottom:1px solid #fdba74;padding:0 19px;background:#fff;overflow-x:auto}
+.tab{font-size:12px;font-weight:600;padding:9px 14px;border-radius:8px 8px 0 0;cursor:pointer;color:#64748b;transition:all .15s;white-space:nowrap;border:1px solid transparent;border-bottom:none;margin-bottom:-1px}
+.tab.on{background:#fff7ed;color:#c2410c;border-color:#fdba74}
+.tab:hover:not(.on){color:#f97316}
+.tab-pane{display:none;border:1px solid #fdba74;border-top:none;border-radius:0 0 12px 12px;background:#fff;padding:16px 19px}
+.tab-pane.on{display:block}
+.desc-txt{font-size:13px;color:#475569;line-height:1.8}
+.desc-txt strong{color:#1e293b;font-weight:600}
+.code-blk{background:#1e293b;border-radius:8px;padding:13px 16px;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;color:#94a3b8;margin:10px 0;overflow-x:auto;white-space:pre}
+.k{color:#93c5fd}.t{color:#34d399}.v{color:#6ee7b7}.s{color:#fda4af}.cm{color:#475569;font-style:italic}.fn{color:#fbbf24}.cl{color:#c4b5fd}.an{color:#fb923c}
+.sbox{display:none;background:#fff7ed;border:2px solid #fdba74;border-radius:14px;padding:22px;text-align:center}
+.sbox.show{display:block;animation:pop .4s ease}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.sbox h3{font-size:18px;font-weight:700;color:#f97316;margin-bottom:7px}
+.sbox p{font-size:13px;color:#7c2d12;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brief">
+    <div class="bt">
+      <div class="badge">Desafio autônomo · 3 Níveis · 90 minutos</div>
+      <div class="btitle">☕ Sistema Bancário — Análise de Crédito</div>
+      <div class="bsub">if, else if, else, &&, ||, !. Decisões encadeadas com múltiplos critérios em Java.</div>
+    </div>
+
+    <div style="display:flex;gap:0;background:#fff">
+      <div class="tabs" id="tabs">
+        <div class="tab on" onclick="showTab(0)">🟢 Básico</div>
+        <div class="tab" onclick="showTab(1)">🟡 Médio</div>
+        <div class="tab" onclick="showTab(2)">🔴 Avançado</div>
+      </div>
+    </div>
+
+    <div class="tab-pane on" id="tp0">
+      <div class="desc-txt">
+        <strong>Nível Básico — 25 min</strong><br><br>
+        Crie <code>CreditoBasico.java</code>. O programa deve ler a idade e a renda mensal do cliente e verificar se ele tem direito a um cartão de crédito básico.<br><br>
+        <strong>Regras:</strong><br>
+        ✅ Aprovado se: <strong>idade >= 18 E renda >= 1.500</strong><br>
+        ❌ Negado se qualquer critério não for atendido<br><br>
+        <strong>Saída esperada:</strong>
+      </div>
+      <div class="code-blk">Idade: 25
+Renda: R$ 2000.00
+→ Cartão BÁSICO aprovado!</div>
+      <div class="desc-txt" style="margin-top:10px">
+        <strong>Dica:</strong> use <code>sc.nextInt()</code> para idade e <code>sc.nextDouble()</code> para renda. Use <code>&&</code> para juntar as duas condições.
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tp1">
+      <div class="desc-txt">
+        <strong>Nível Médio — 35 min</strong><br><br>
+        Crie <code>CreditoMedio.java</code>. Leia idade, renda e score de crédito (0-1000) e classifique o cliente em um dos três cartões disponíveis.<br><br>
+        <strong>Regras (verifique nesta ordem):</strong><br>
+        🥇 <strong>Cartão PLATINUM:</strong> renda >= 10.000 AND score >= 800<br>
+        🥈 <strong>Cartão GOLD:</strong> renda >= 5.000 AND score >= 600<br>
+        🥉 <strong>Cartão BASIC:</strong> idade >= 18 AND renda >= 1.500 AND score >= 300<br>
+        ❌ <strong>Negado:</strong> demais casos<br><br>
+        <strong>Teste com:</strong><br>
+        Perfil A: renda=12000, score=850 → PLATINUM<br>
+        Perfil B: renda=6000, score=650 → GOLD<br>
+        Perfil C: renda=2000, score=400 → BASIC<br>
+        Perfil D: renda=800, score=200 → Negado
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tp2">
+      <div class="desc-txt">
+        <strong>Nível Avançado — 30 min</strong><br><br>
+        Crie <code>CreditoAvancado.java</code>. Sistema completo com validação, limite de crédito calculado e mensagem personalizada.<br><br>
+        <strong>Além da classificação do nível médio, adicione:</strong><br>
+        1. <strong>Validação:</strong> se score < 0, score > 1000, ou renda < 0 → "Dados inválidos" e encerre<br>
+        2. <strong>Limite calculado:</strong><br>
+        &nbsp;&nbsp;• PLATINUM: <code>limite = renda * 3.0</code><br>
+        &nbsp;&nbsp;• GOLD: <code>limite = renda * 2.0</code><br>
+        &nbsp;&nbsp;• BASIC: <code>limite = renda * 1.0</code><br>
+        3. <strong>Juros:</strong> se score >= 700: 1.5% a.m., senão: 2.9% a.m.<br>
+        4. <strong>printf formatado</strong> com todos os dados<br><br>
+        <strong>Saída esperada:</strong>
+      </div>
+      <div class="code-blk">===== ANÁLISE DE CRÉDITO =====
+Renda:  R$ 12000.00 | Score: 850
+Cartão: PLATINUM
+Limite: R$ 36000.00
+Juros:  1.5% a.m.
+==============================</div>
+    </div>
+    
+    <div class="bb">
+      <div class="two">
+        <div>
+          <div class="colt">Requisitos — marque ao concluir</div>
+          <div class="req-wrap" id="req-list"></div>
+        </div>
+        <div>
+          <div class="colt">Critérios de avaliação</div>
+          <div class="crit-list">
+            <div class="ci"><div class="cd"></div>Scanner importado e instanciado corretamente</div>
+            <div class="ci"><div class="cd"></div>Tipos corretos: int, double, String nas variáveis</div>
+            <div class="ci"><div class="cd"></div>if/else if/else com condições na ordem certa</div>
+            <div class="ci"><div class="cd"></div>&& e || usados pelo menos uma vez cada</div>
+            <div class="ci"><div class="cd"></div>Resultado em variável String antes do print</div>
+            <div class="ci"><div class="cd"></div>printf com formatação %.2f para valores monetários</div>
+            <div class="ci"><div class="cd g"></div>Bônus: validação de entrada com return</div>
+            <div class="ci"><div class="cd g"></div>Bônus: cálculo de limite e juros no nível avançado</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pw">
+    <div class="pl"><strong>Progresso</strong><span id="ptxt">0 de 8 concluídos</span></div>
+    <div class="pbg"><div class="pfill" id="pfill"></div></div>
+    <div class="pm" id="pmsg">Comece pelo nível básico: crie CreditoBasico.java e importe o Scanner.</div>
+  </div>
+
+  <div class="tr">
+    <div class="tnum" id="tnum">90:00</div>
+    <div class="tinfo"><strong>Cronômetro</strong><p id="tmsg">Inicie quando o docente autorizar</p></div>
+    <button class="tbtn" id="tbtn" onclick="timerClick()">Iniciar</button>
+    <button class="tbtn sec" onclick="timerReset()">Zerar</button>
+  </div>
+
+  <div class="sbox" id="success">
+    <h3>☕ Sistema bancário entregue!</h3>
+    <p>Condicionais Java do básico ao avançado — dominado!<br>Na Aula 03: <code>for</code> e <code>while</code> em Java — o programa começa a repetir ações!</p>
+  </div>
+</div>
+
+<script>
+const REQS=[
+{t:'Criar <code>CreditoBasico.java</code> com estrutura de classe e main'},
+{t:'Ler idade (<code>nextInt</code>) e renda (<code>nextDouble</code>) com Scanner'},
+{t:'Usar <code>&&</code> para verificar as duas condições juntas'},
+{t:'Criar <code>CreditoMedio.java</code> e classificar em PLATINUM, GOLD ou BASIC'},
+{t:'Usar <code>&&</code> corretamente em cada faixa do nível médio'},
+{t:'Guardar o nome do cartão em variável String antes de imprimir'},
+{t:'Criar <code>CreditoAvancado.java</code> com validação, limite e juros'},
+{t:'Formatar saída com <code>printf</code> e <code>%.2f</code> para os valores monetários'},
+];
+const MSGS=[
+'Crie CreditoBasico.java e importe java.util.Scanner.',
+'Scanner criado! Leia a idade com nextInt().',
+'Renda lida! Agora o if com && para as duas condições.',
+'Básico pronto! Inicie CreditoMedio.java com 3 faixas.',
+'Faixas PLATINUM e GOLD prontas! Adicione BASIC.',
+'Ótimo! Guarde o nome do cartão em variável String.',
+'Nível médio pronto! Agora CreditoAvancado com validação.',
+'Valide a entrada com return! Calcule limite e juros.',
+'Tudo pronto! Teste todos os perfis e mostre ao docente.'
+];
+let done=new Set(),ticking=false,tSec=90*60,tInterval=null;
+
+function showTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',i===j));
+  document.querySelectorAll('.tab-pane').forEach((p,j)=>p.classList.toggle('on',i===j));
+}
+
+function buildReqs(){
+  const el=document.getElementById('req-list');REQS.forEach((r,i)=>{
+    const d=document.createElement('div');d.className='ri';d.style.marginBottom='5px';
+    d.innerHTML=`<div class="rc" id="rc-${i}" onclick="chk(${i})"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="rt" id="rt-${i}">${r.t}</div>`;
+    el.appendChild(d);
+  });
+}
+function chk(i){
+  if(done.has(i)){done.delete(i);document.getElementById('rc-'+i).classList.remove('on');document.getElementById('rt-'+i).classList.remove('done');}
+  else{done.add(i);document.getElementById('rc-'+i).classList.add('on');document.getElementById('rt-'+i).classList.add('done');}
+  const n=done.size;
+  document.getElementById('pfill').style.width=Math.round((n/REQS.length)*100)+'%';
+  document.getElementById('ptxt').textContent=n+' de '+REQS.length+' concluídos';
+  document.getElementById('pmsg').textContent=MSGS[Math.min(n,MSGS.length-1)];
+  if(n===REQS.length)document.getElementById('success').classList.add('show');
+  else document.getElementById('success').classList.remove('show');
+}
+function timerClick(){
+  if(!ticking){
+    ticking=true;document.getElementById('tbtn').textContent='Pausar';document.getElementById('tbtn').style.background='#475569';
+    document.getElementById('tmsg').textContent='Em andamento';
+    tInterval=setInterval(()=>{
+      tSec--;const m=Math.floor(tSec/60),s=tSec%60;
+      const el=document.getElementById('tnum');
+      el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+      el.className='tnum'+(tSec<=120?' danger':tSec<=600?' warn':'');
+      if(tSec===2700)document.getElementById('tmsg').textContent='45 min — nível básico deve estar pronto!';
+      if(tSec===1800)document.getElementById('tmsg').textContent='30 min — parta para o nível avançado!';
+      if(tSec===600)document.getElementById('tmsg').textContent='10 min — finalize e teste todos os perfis!';
+      if(tSec===120)document.getElementById('tmsg').textContent='2 min — chame o docente para avaliação!';
+      if(tSec<=0){clearInterval(tInterval);ticking=false;document.getElementById('tbtn').disabled=true;}
+    },1000);
+  }else{
+    ticking=false;clearInterval(tInterval);
+    document.getElementById('tbtn').textContent='Continuar';document.getElementById('tbtn').style.background='#f97316';
+  }
+}
+function timerReset(){
+  clearInterval(tInterval);ticking=false;tSec=90*60;
+  document.getElementById('tnum').textContent='90:00';document.getElementById('tnum').className='tnum';
+  document.getElementById('tbtn').textContent='Iniciar';document.getElementById('tbtn').style.background='#f97316';
+  document.getElementById('tbtn').disabled=false;
+  document.getElementById('tmsg').textContent='Inicie quando o docente autorizar';
+}
+buildReqs();
+</script>
+</body>
+</html>
