@@ -5,11 +5,11 @@ public class EX2 {
 
         Scanner sc = new Scanner(System.in);
 
-        int[] v = { 5, 3, 8, 1, 9, 4, 7 };
+        int[] valor = { 5, 3, 8, 1, 9, 4, 7 };
 
-        System.out.println("\nPrimeiro: " + v[0]);
-        System.out.println("Último: " + v[v.length - 1]);
-        System.out.println("Central: " + v[v.length/ 2]);
+        System.out.println("\nPrimeiro: " + valor[0]);
+        System.out.println("Último: " + valor[valor.length - 1]);
+        System.out.println("Central: " + valor[valor.length/ 2]);
 
         sc.close();
 
